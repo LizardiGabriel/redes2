@@ -68,30 +68,30 @@ int iniciarSocket(int puerto) {
         char *mensaje = buffer;
         printf("Mensaje recibido del cliente: %s\n", mensaje);
 
-        if (strcmp(mensaje, "list1")) {
-            printf("soy list 1 ================================================================");
+        char *clave = opcJson("opcion", mensaje);
+
+        if (strcmp(clave, "list1") == 0) {
             char *contenido = listarContenido(ruta);
             int tam = strlen(contenido);
             printf("tam: %d\n", tam);
             printf("contenido: %s\n", contenido);
             n = write(newsockfd, contenido, strlen(contenido));
 
-        } else if (strcmp(mensaje, "mkdir2")) {
+        } else if (strcmp(clave, "mkdir2") == 0) {
 
-        } else if (strcmp(mensaje, "rmdir3")) {
+        } else if (strcmp(clave, "rmdir3") == 0) {
 
-        } else if (strcmp(mensaje, "cd4")) {
+        } else if (strcmp(clave, "cd4") == 0) {
             char *recib = recibido();
             int taman = strlen(recib);
             printf("tam: %d\n", taman);
             printf("contenido: %s\n", recib);
 
-        } else if (strcmp(mensaje, "put5")) {
+        } else if (strcmp(clave, "put5") == 0) {
 
-        } else if (strcmp(mensaje, "get6")) {
+        } else if (strcmp(clave, "get6") == 0) {
 
-        } else if (strcmp(mensaje, "list0")) {
-            printf("soy list 0 ================================================================");
+        } else if (strcmp(clave, "list0") == 0) {
             char *contenido = directorioActual(ruta);
             int tam = strlen(contenido);
             printf("tam: %d\n", tam);
@@ -99,6 +99,7 @@ int iniciarSocket(int puerto) {
             n = write(newsockfd, contenido, strlen(contenido));
         }else{
             printf("---------->Comando no reconocido :c <----------\n");
+            n = write(newsockfd, "Comando no reconocido", 21);
         }
 
         if (n < 0)

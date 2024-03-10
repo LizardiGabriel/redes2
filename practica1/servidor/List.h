@@ -15,7 +15,7 @@ char *cambiarDirectorio(char *ruta);
 
 char *recibido();
 
-
+char *opcJson(char *opc, char *mensaje);
 
 
 #endif //SERVIDOR_LIST_H

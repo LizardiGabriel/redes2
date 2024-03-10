@@ -11,6 +11,43 @@
 
 #include "List.h"
 
+char *opcJson(char *opcion, char *msj){
+
+    json_error_t error;
+    json_t *root = json_loads(msj, 0, &error);
+
+    // Verificar si la carga del JSON fue exitosa
+    if (!root) {
+        fprintf(stderr, "Error parsing JSON: %s\n", error.text);
+        exit(1);
+    }
+
+    // Acceder al campo "nombre"
+    json_t *nombre = json_object_get(root, opcion);
+
+    // Verificar si el campo "nombre" existe y es un string
+    if (!nombre || !json_is_string(nombre)) {
+        fprintf(stderr, "Error: El campo 'nombre' no es un string o no existe.\n");
+        json_decref(root); // Liberar el JSON
+        exit(1);
+    }
+
+    // Obtener el valor del campo "nombre"
+    const char *nombre_value = json_string_value(nombre);
+
+    // Imprimir el valor del campo "nombre"
+    //printf("El nombre es: %s\n", nombre_value);
+
+    char *ret = malloc(strlen(nombre_value) + 1);
+    strcpy(ret, nombre_value);
+
+    // Liberar el JSON
+    json_decref(root);
+
+    return ret;
+
+}
+
 
 char *listarContenido(char *ruta) {
 

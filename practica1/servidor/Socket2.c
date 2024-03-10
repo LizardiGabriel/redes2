@@ -18,10 +18,10 @@
 int iniciarSocket(int puerto) {
 
     int puerto_num = puerto;
-
+    char buffer[256];
     int sockfd, newsockfd, portno, sockfd1, newsockfd1;
     socklen_t clilen;
-    char buffer[256];
+
     struct sockaddr_in serv_addr, cli_addr;
     int n;
 
@@ -59,14 +59,26 @@ int iniciarSocket(int puerto) {
         if (newsockfd < 0)
             printf("ERROR on accept\n");
 
-        // Leer datos del cliente
+        // leer tam del mensaje
         memset(buffer, 0, 256);
         n = read(newsockfd, buffer, 255);
-        if (n < 0)
-            printf("ERROR reading from socket\n");
+        long int tam = atoi(buffer);
+        printf("recibi el tam: %ld\n", tam);
+
+        memset(buffer, 0, 256);
+        n = read(newsockfd, buffer, 255);
+        int veces = atoi(buffer);
+        printf("num de envios: %d\n", veces);
+        
+        memset(buffer, 0, 256);
+        n = read(newsockfd, buffer, 255);
+            if(n < 0)
+                printf("ERROR reading from socket\n"); 
+        printf("Mensaje recibido del cliente: %s\n", buffer);
+
 
         char *mensaje = buffer;
-        printf("Mensaje recibido del cliente: %s\n", mensaje);
+        //printf("Mensaje recibido del cliente: %s\n", mensaje);
 
         char *clave = opcJson("opcion", mensaje);
 
@@ -78,25 +90,46 @@ int iniciarSocket(int puerto) {
             n = write(newsockfd, contenido, strlen(contenido));
 
         } else if (strcmp(clave, "mkdir2") == 0) {
+            char *carpetaNueva = opcJson("carpeta", mensaje);
+            char *resMkdir = mkdirCarpeta(ruta, carpetaNueva);
+
+            int tam = strlen(resMkdir);
+            printf("tam: %d\n", tam);
+            printf("contenido: %s\n", resMkdir);
+            n = write(newsockfd, resMkdir, strlen(resMkdir));
 
         } else if (strcmp(clave, "rmdir3") == 0) {
+            char *borrarAlgo = opcJson("archivo", mensaje);
+            char *resRmdir = rmdirAlgo(ruta, borrarAlgo);
+
+            int tam = strlen(resRmdir);
+            printf("tam: %d\n", tam);
+            printf("contenido: %s\n", resRmdir);
+            n = write(newsockfd, resRmdir, strlen(resRmdir));
 
         } else if (strcmp(clave, "cd4") == 0) {
             char *ruta_nueva = opcJson("carpeta", mensaje);
-            int tam_nuevo =  strlen(ruta) + strlen(ruta_nueva) + 1;
-            ruta = (char *) realloc(ruta, tam_nuevo);
+            int tam_nuevo = strlen(ruta) + strlen(ruta_nueva) + 1;
+            ruta = (char *)realloc(ruta, tam_nuevo);
             strcat(ruta, "/");
             strcat(ruta, ruta_nueva);
-            printf("Ruta nuevecita: %s\n", ruta); 
+            printf("Ruta nuevecita: %s\n", ruta);
 
             char *contenido = cambiarDirectorio(ruta);
             int tam = strlen(contenido);
             printf("tam: %d\n", tam);
             printf("contenido: %s\n", contenido);
             n = write(newsockfd, contenido, strlen(contenido));
-            
 
         } else if (strcmp(clave, "put5") == 0) {
+            char *archivoZipJson = opcJson("archivo", mensaje);
+            char *tipo = opcJson("tipo", mensaje);
+            char *nombreOriginal = opcJson("nombre", mensaje);
+            char *contenido = recibido("recibi el mensaje del archivo zip que me mandaste en el json");
+            int tam = strlen(contenido);
+            printf("tam: %d\n", tam);
+            printf("contenido: %s\n", contenido);
+            n = write(newsockfd, contenido, strlen(contenido));
 
         } else if (strcmp(clave, "get6") == 0) {
 
@@ -106,7 +139,7 @@ int iniciarSocket(int puerto) {
             printf("tam: %d\n", tam);
             printf("contenido: %s\n", contenido);
             n = write(newsockfd, contenido, strlen(contenido));
-        }else{
+        } else {
             printf("---------->Comando no reconocido :c <----------\n");
             n = write(newsockfd, "Comando no reconocido", 21);
         }
@@ -117,6 +150,7 @@ int iniciarSocket(int puerto) {
         printf("===========================\n");
 
         // Cerrar el socket de comunicación con el cliente
+        
         close(newsockfd);
     }
 

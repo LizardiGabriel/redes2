@@ -13,9 +13,13 @@ char *directorio();
 
 char *cambiarDirectorio(char *ruta);
 
-char *recibido(char *);
+char *recibido(char *mensaje);
 
 char *opcJson(char *opc, char *mensaje);
+
+char *mkdirCarpeta(char *ruta, char *carpeta);
+
+char *rmdirAlgo(char *ruta, char *archivo);
 
 
 #endif //SERVIDOR_LIST_H

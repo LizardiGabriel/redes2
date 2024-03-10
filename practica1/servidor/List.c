@@ -9,7 +9,14 @@
 #include <jansson.h>
 #include <string.h>
 
+#include <sys/stat.h>
+#include <sys/types.h>
+
+#include <unistd.h>
+
 #include "List.h"
+
+#include <zlib.h>
 
 char *opcJson(char *opcion, char *msj){
 
@@ -201,7 +208,7 @@ char *directorioActual(char *ruta) {
         exit(1);
     }
     // Añadir el arreglo JSON al objeto raíz
-    json_object_set_new(jsonRoot, "directorio", jsonString0);
+    json_object_set_new(jsonRoot, "path remoto", jsonString0);
 
     // Convertir el objeto JSON en una cadena JSON formateada
     char *jsonString = json_dumps(jsonRoot, JSON_COMPACT);
@@ -329,5 +336,67 @@ char *recibido(char *mensaje) {
     json_decref(jsonRoot);
     json_decref(jsonArray);
     free(jsonString);
+}
+
+
+char *mkdirCarpeta(char *ruta, char *carpeta){
+    int tam = strlen(ruta) + 1 + strlen(carpeta) + 1;
+    char *rutita = malloc(tam);
+    strcpy(rutita, ruta);
+    strcat(rutita, "/");
+    strcat(rutita, carpeta);
+    printf("ruta de la carpeta nueva: %s\n", rutita);
+
+    int res = mkdir(rutita, 0777);
+    char *mensaje;
+    if (res == 0) {
+        mensaje = "Carpeta creada";
+    } else {
+        mensaje = "Error al crear la carpeta";
+    }
+
+    char *ret = recibido(mensaje);
+    return ret;
+}
+
+char *rmdirAlgo(char *ruta, char *archivo){
+
+    char *mensaje;
+
+    int tam = strlen(ruta) + 1 + strlen(archivo) + 1;
+    char *rutita = malloc(tam);
+    strcpy(rutita, ruta);
+    strcat(rutita, "/");
+    strcat(rutita, archivo);
+    printf("rutita a borrar: %s\n", rutita);
+
+    if (access(rutita, F_OK) != -1) {
+
+        if (remove(rutita) == 0) {
+            tam = strlen("Se ha eliminado: ") + strlen(rutita) + 1;
+            mensaje = malloc(tam);
+            strcpy(mensaje, "Se ha eliminado: ");
+            strcat(mensaje, rutita);
+            printf("mensaje: %s\n", mensaje);
+                            
+        } else {
+            tam = strlen("Error al eliminar: ") + strlen(rutita) + 1;
+            mensaje = malloc(tam);
+            strcpy(mensaje, "Error al eliminar: ");
+            strcat(mensaje, rutita);
+            printf("mensaje: %s\n", mensaje);
+
+        }
+    } else {
+        tam = strlen("No existe: ") + strlen(rutita) + 1;
+        mensaje = malloc(tam);
+        strcpy(mensaje, "No existe: ");
+        strcat(mensaje, rutita);
+        printf("mensaje: %s\n", mensaje);
+    }
+
+    char *ret = recibido(mensaje);
+    return ret;
+
 }
 

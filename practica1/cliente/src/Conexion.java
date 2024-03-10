@@ -23,13 +23,30 @@ public class Conexion {
             salida = new PrintWriter(socket.getOutputStream(), true);
             ///System.out.println("Conexion establecida con el servidor");
 
+            //size o ennv
+            int tam = env.length();
+            salida.println(tam);
+
+            long veces = tam/255;
+            // redondear hacia arriba
+            if(tam%255 != 0){
+                veces++;
+            }
+            salida.println(veces);
 
             salida.println(env);
+
+            /*for (int i = 0; i < veces; i++) {
+                salida.println(env.substring(i*255, Math.min(tam, (i+1)*255)));
+            }
+
+             */
+
             //System.out.println("1. Mensaje enviado al servidor");
 
             // voy a leer una cadena que tiene saltos de linea
             String mensaje = entrada.readLine();
-            System.out.println("\n\nMensaje del servidor: ");
+            System.out.println("\n");
             JsonToString pasar = new JsonToString();
             pasar.leer(mensaje);
 

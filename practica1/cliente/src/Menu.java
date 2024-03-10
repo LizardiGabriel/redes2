@@ -1,38 +1,56 @@
 import java.io.IOException;
 import java.util.Scanner;
 
+import static java.lang.System.exit;
+
 public class Menu {
 
     public void Menu() throws IOException {
 
 
         Scanner scanner = new Scanner(System.in);
-        int choice;
+        int choice = 0;
         int choiceList = 0;
 
         Local local = new Local();
         Remoto remoto = new Remoto();
+        String localPath = System.getProperty("user.dir");
 
         do {
+            choice = 0;
+            choiceList = 0;
             remoto.getDirectorio();
+            System.out.println("path local: " + localPath);
 
             System.out.println("=========== Menu ===========");
-            System.out.println("1. Listar el contenido de las carpetas almacenadas local o remotamente (list)");
+            System.out.println("1. Listar el contenido del folder local o remotamente (list)");
             System.out.println("2. Crear carpetas Local o remotamente (mkdir)");
             System.out.println("3. Eliminar carpetas/archivos local o remotamente (rmdir)");
             System.out.println("4. Cambiar la ruta de directorio local o remoto (cd)");
-            System.out.println("5. Enviar archivos o carpetas desde una carpeta local (cliente) hacia una carpeta remota (servidor) (put)");
-            System.out.println("6. Enviar archivos o carpetas desde una carpeta remota -servidor- hacia una carpeta local -cliente- (get)");
+            System.out.println("5. Enviar archivos o carpetas al servidor (put)");
+            System.out.println("6. Recibir archivos o carpetas desde el servidor(get)");
             System.out.println("7. Salir de la aplicacion (quit)");
             System.out.println("=============================");
             System.out.print("Por favor, selecciona una opcion: ");
-            choice = scanner.nextInt();
+            try {
+                choice = scanner.nextInt();
+            } catch (Exception e) {
+                System.out.println("Opcion no valida!!!");
+                exit(1);
+            }
 
-            if(choice != 7 && choiceList != 5 && choiceList != 6){
+            if((choice != 7) && (choice != 5) && (choice != 6)){
                 System.out.println("1. Local");
                 System.out.println("2. Remoto");
                 System.out.print("Por favor, selecciona una opcion: ");
-                choiceList = scanner.nextInt();
+                try {
+                    choiceList = scanner.nextInt();
+                } catch (Exception e) {
+                    System.out.println("Opcion no valida!!!");
+                    exit(1);
+
+                }
+
             }
 
             switch (choice) {
@@ -73,7 +91,7 @@ public class Menu {
 
                     } else if (choiceList == 2) {
                         System.out.println("remotamente");
-                        remoto.eliminarCarpeta();
+                        remoto.eliminarAlgo();
 
                     }
                     break;
@@ -82,7 +100,7 @@ public class Menu {
                     // Logica para cambiar la ruta de directorio
                     if (choiceList == 1) {
                         System.out.println("local");
-                        local.cambiarDirectorio();
+                        localPath = local.cambiarDirectorio(localPath);
 
                     } else if (choiceList == 2) {
                         System.out.println("remotamente");
@@ -93,7 +111,7 @@ public class Menu {
                 case 5:
                     System.out.println("(put): ");
                     // Logica para enviar archivos o carpetas
-                    remoto.enviarArchivo();
+                    remoto.enviarArchivo(localPath);
                     break;
                 case 6:
                     System.out.println("(get): ");
@@ -108,6 +126,7 @@ public class Menu {
                     break;
                 default:
                     System.out.println("Opcion no valida. Por favor, selecciona una opcion del menu.");
+                    exit(0);
                     break;
             }
 

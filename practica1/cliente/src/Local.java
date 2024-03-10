@@ -28,4 +28,10 @@ public class Local {
     public void crearCarpeta() {
         // crear una carpeta en el directorio donde se esta ejecutando la aplicacion java
     }
+
+    public void eliminarCarpeta() {
+    }
+
+    public void cambiarDirectorio() {
+    }
 }

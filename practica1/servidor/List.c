@@ -10,8 +10,12 @@
 #include <string.h>
 
 #include "List.h"
-char *listarContenido(){
-    DIR *dir = opendir(".");
+
+
+char *listarContenido(char *ruta) {
+
+    DIR *dir = opendir(ruta);
+
     char **archivos;
     char **carpetas;
     int num_elementos_arch;
@@ -40,13 +44,11 @@ char *listarContenido(){
                 strcpy(carpetas[num_elementos_car], entry->d_name);
                 num_elementos_car++;
 
-
             } else {
                 // archivo
                 archivos[num_elementos_arch] = malloc(strlen(entry->d_name) + 1);
                 strcpy(archivos[num_elementos_arch], entry->d_name);
                 num_elementos_arch++;
-
             }
         }
         closedir(dir);
@@ -128,6 +130,167 @@ char *listarContenido(){
         free(carpetas[i]);
     }
     free(carpetas);
-
-
 }
+
+char *directorioActual(char *ruta) {
+    char *directorio = ruta;
+    if (directorio == NULL) {
+        perror("Error al obtener el directorio actual");
+        exit(1);
+    }
+
+    // Crear un objeto JSON raíz
+    json_t *jsonRoot = json_object();
+    if (jsonRoot == NULL) {
+        fprintf(stderr, "Error al crear el objeto JSON raíz\n");
+        exit(1);
+    }
+
+    // Crear un objeto JSON de tipo arreglo para almacenar los nombres de los archivos
+    json_t *jsonArray = json_array();
+    if (jsonArray == NULL) {
+        fprintf(stderr, "Error al crear el objeto JSON\n");
+        json_decref(jsonRoot);
+        exit(1);
+    }
+
+    // Crear un objeto JSON para almacenar la ruta del directorio
+    json_t *jsonString0 = json_string(directorio);
+    if (jsonString0 == NULL) {
+        fprintf(stderr, "Error al crear el string JSON\n");
+        json_decref(jsonArray);
+        exit(1);
+    }
+    // Añadir el arreglo JSON al objeto raíz
+    json_object_set_new(jsonRoot, "directorio", jsonString0);
+
+    // Convertir el objeto JSON en una cadena JSON formateada
+    char *jsonString = json_dumps(jsonRoot, JSON_COMPACT);
+    if (jsonString == NULL) {
+        fprintf(stderr, "Error al convertir el objeto JSON raíz a cadena\n");
+        json_decref(jsonRoot);
+        exit(1);
+    }
+
+    return jsonString;
+
+    // Liberar la memoria asignada para el objeto JSON y la cadena JSON
+    json_decref(jsonRoot);
+    json_decref(jsonArray);
+    free(jsonString);
+}
+
+char *directorio() {
+    char *directorio = getcwd(NULL, 0);
+    if (directorio == NULL) {
+        perror("Error al obtener el directorio actual");
+        exit(1);
+    }
+    return directorio;
+}
+
+char *cambiarDirectorio(char *ruta) {
+
+    DIR *dir = opendir(ruta);
+    char *mensaje_ok = "Directorio cambiado";
+    char *mensaje_error = "Error al cambiar el directorio";
+    int len = 0;
+    char *directorio;
+
+    if (dir) {
+        len = strlen(mensaje_ok);
+        directorio = malloc(len + 1);
+        strcpy(directorio, mensaje_ok);
+        closedir(dir);
+
+    } else {
+        len = strlen(mensaje_error);
+        directorio = malloc(len + 1);
+        strcpy(directorio, mensaje_error);
+    }
+
+    // Crear un objeto JSON raíz
+    json_t *jsonRoot = json_object();
+    if (jsonRoot == NULL) {
+        fprintf(stderr, "Error al crear el objeto JSON raíz\n");
+        exit(1);
+    }
+
+    // Crear un objeto JSON de tipo arreglo para almacenar los nombres de los archivos
+    json_t *jsonArray = json_array();
+    if (jsonArray == NULL) {
+        fprintf(stderr, "Error al crear el objeto JSON\n");
+        json_decref(jsonRoot);
+        exit(1);
+    }
+
+    // Crear un objeto JSON para almacenar la ruta del directorio
+    json_t *jsonString0 = json_string(directorio);
+    if (jsonString0 == NULL) {
+        fprintf(stderr, "Error al crear el string JSON\n");
+        json_decref(jsonArray);
+        exit(1);
+    }
+    // Añadir el arreglo JSON al objeto raíz
+    json_object_set_new(jsonRoot, "directorio", jsonString0);
+
+    // Convertir el objeto JSON en una cadena JSON formateada
+    char *jsonString = json_dumps(jsonRoot, JSON_COMPACT);
+    if (jsonString == NULL) {
+        fprintf(stderr, "Error al convertir el objeto JSON raíz a cadena\n");
+        json_decref(jsonRoot);
+        exit(1);
+    }
+
+    return jsonString;
+
+    // Liberar la memoria asignada para el objeto JSON y la cadena JSON
+    json_decref(jsonRoot);
+    json_decref(jsonArray);
+    free(jsonString);
+}
+
+char *recibido() {
+    char *mensaje = "Mensaje recibido";
+
+    // Crear un objeto JSON raíz
+    json_t *jsonRoot = json_object();
+    if (jsonRoot == NULL) {
+        fprintf(stderr, "Error al crear el objeto JSON raíz\n");
+        exit(1);
+    }
+
+    // Crear un objeto JSON de tipo arreglo para almacenar los nombres de los archivos
+    json_t *jsonArray = json_array();
+    if (jsonArray == NULL) {
+        fprintf(stderr, "Error al crear el objeto JSON\n");
+        json_decref(jsonRoot);
+        exit(1);
+    }
+
+    // Crear un objeto JSON para almacenar la ruta del directorio
+    json_t *jsonString0 = json_string(mensaje);
+    if (jsonString0 == NULL) {
+        fprintf(stderr, "Error al crear el string JSON\n");
+        json_decref(jsonArray);
+        exit(1);
+    }
+    // Añadir el arreglo JSON al objeto raíz
+    json_object_set_new(jsonRoot, "mensaje", jsonString0);
+
+    // Convertir el objeto JSON en una cadena JSON formateada
+    char *jsonString = json_dumps(jsonRoot, JSON_COMPACT);
+    if (jsonString == NULL) {
+        fprintf(stderr, "Error al convertir el objeto JSON raíz a cadena\n");
+        json_decref(jsonRoot);
+        exit(1);
+    }
+
+    return jsonString;
+
+    // Liberar la memoria asignada para el objeto JSON y la cadena JSON
+    json_decref(jsonRoot);
+    json_decref(jsonArray);
+    free(jsonString);
+}
+

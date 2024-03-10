@@ -13,7 +13,7 @@ public class Conexion {
     String hostName = "localhost";
     int portNumber = 8080;
 
-    public void SocketCliente(int opcion){
+    public void SocketCliente(String env){
 
 
         try{
@@ -21,15 +21,15 @@ public class Conexion {
 
             entrada = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             salida = new PrintWriter(socket.getOutputStream(), true);
-            System.out.println("Conexion establecida con el servidor");
+            ///System.out.println("Conexion establecida con el servidor");
 
 
-            salida.println(opcion);
-            System.out.println("1. Mensaje enviado al servidor");
+            salida.println(env);
+            //System.out.println("1. Mensaje enviado al servidor");
 
             // voy a leer una cadena que tiene saltos de linea
             String mensaje = entrada.readLine();
-            System.out.println("Mensaje del servidor: ");
+            System.out.println("\n\nMensaje del servidor: ");
             JsonToString pasar = new JsonToString();
             pasar.leer(mensaje);
 
@@ -45,5 +45,7 @@ public class Conexion {
             System.exit(1);
         }
     }
+
+
 
 }

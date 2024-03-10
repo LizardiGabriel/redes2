@@ -49,6 +49,8 @@ char *opcJson(char *opcion, char *msj){
 }
 
 
+
+
 char *listarContenido(char *ruta) {
 
     DIR *dir = opendir(ruta);
@@ -287,9 +289,7 @@ char *cambiarDirectorio(char *ruta) {
     free(jsonString);
 }
 
-char *recibido() {
-    char *mensaje = "Mensaje recibido";
-
+char *recibido(char *mensaje) {
     // Crear un objeto JSON raíz
     json_t *jsonRoot = json_object();
     if (jsonRoot == NULL) {

@@ -13,7 +13,7 @@ char *directorio();
 
 char *cambiarDirectorio(char *ruta);
 
-char *recibido();
+char *recibido(char *);
 
 char *opcJson(char *opc, char *mensaje);
 

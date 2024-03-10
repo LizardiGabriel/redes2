@@ -82,10 +82,19 @@ int iniciarSocket(int puerto) {
         } else if (strcmp(clave, "rmdir3") == 0) {
 
         } else if (strcmp(clave, "cd4") == 0) {
-            char *recib = recibido();
-            int taman = strlen(recib);
-            printf("tam: %d\n", taman);
-            printf("contenido: %s\n", recib);
+            char *ruta_nueva = opcJson("carpeta", mensaje);
+            int tam_nuevo =  strlen(ruta) + strlen(ruta_nueva) + 1;
+            ruta = (char *) realloc(ruta, tam_nuevo);
+            strcat(ruta, "/");
+            strcat(ruta, ruta_nueva);
+            printf("Ruta nuevecita: %s\n", ruta); 
+
+            char *contenido = cambiarDirectorio(ruta);
+            int tam = strlen(contenido);
+            printf("tam: %d\n", tam);
+            printf("contenido: %s\n", contenido);
+            n = write(newsockfd, contenido, strlen(contenido));
+            
 
         } else if (strcmp(clave, "put5") == 0) {
 

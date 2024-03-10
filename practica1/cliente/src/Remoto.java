@@ -8,7 +8,7 @@ public class Remoto {
         Conexion conn = new Conexion();
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("opcion", "list1");
-        System.out.println("mensaje a enviar: " + jsonObject.toString());
+        //System.out.println("mensaje a enviar: " + jsonObject.toString());
         conn.SocketCliente(jsonObject.toString());
 
     }
@@ -28,7 +28,7 @@ public class Remoto {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("opcion", "cd4");
         jsonObject.put("carpeta", carpeta);
-        System.out.println("mensaje a enviar: " + jsonObject.toString());
+        //System.out.println("mensaje a enviar: " + jsonObject.toString());
 
         Conexion conn = new Conexion();
         conn.SocketCliente(jsonObject.toString());
@@ -50,7 +50,7 @@ public class Remoto {
         Conexion conn = new Conexion();
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("opcion", "list0");
-        System.out.println("mensaje a enviar: " + jsonObject.toString());
+        //System.out.println("mensaje a enviar: " + jsonObject.toString());
         conn.SocketCliente(jsonObject.toString());
 
 

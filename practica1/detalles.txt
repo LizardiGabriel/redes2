@@ -10,3 +10,13 @@ Implementar una aplicación cliente - servidor que permita al usuario
 6. Enviar archivos o carpetas desde una carpeta remota -servidor- hacia una carpeta local -cliente- (get)
 7. Salir de la aplicación (quit)
 
+
+
+
+brew install json-c
+/opt/homebrew/Cellar/json-c/0.17
+#include <json.h>
+$ clang -I/usr/include/json-c/ -o test test.c -ljson-c
+
+
+The documentation is available online: https://json-c.github.io/json-c/ Files json_object.c and/or json_tokener.c is most likely w

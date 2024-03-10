@@ -1,0 +1,10 @@
+bunzip2 -c jansson-2.14.tar.bz2 | tar xf -
+cd jansson-2.14
+
+mkdir build
+cd build
+cmake 
+
+make
+make check
+make install

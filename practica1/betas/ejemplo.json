@@ -1,0 +1,13 @@
+{
+    "nombre": "Juan",
+    "edad": 30,
+    "ciudad": "Ciudad de México",
+    "casado": false,
+    "hobbies": ["correr", "leer", "viajar"],
+    "direccion": {
+      "calle": "Calle Principal",
+      "numero": 123,
+      "codigo_postal": "12345"
+    }
+  }
+  

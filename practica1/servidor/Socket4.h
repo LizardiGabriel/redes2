@@ -4,7 +4,7 @@
 #include "Socket4.c"
 
 
-int iniciarSocket4(int puerto, char* nombre, int tam, char *path);
+int iniciarSocket4(int puerto, char* nombre, int tam);
 
 
 #endif 

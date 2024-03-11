@@ -11,13 +11,15 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 
+
+
 public class Remoto {
     public void listarContenido() throws IOException {
         Conexion conn = new Conexion();
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("opcion", "list1");
         //System.out.println("mensaje a enviar: " + jsonObject.toString());
-        conn.SocketCliente(jsonObject.toString());
+        String a = conn.SocketCliente(jsonObject.toString());
 
     }
 
@@ -31,7 +33,7 @@ public class Remoto {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("opcion", "mkdir2");
         jsonObject.put("carpeta", carpeta);
-        conn.SocketCliente(jsonObject.toString());
+        String a =  conn.SocketCliente(jsonObject.toString());
 
     }
 
@@ -45,7 +47,7 @@ public class Remoto {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("opcion", "rmdir3");
             jsonObject.put("archivo", archivo);
-            conn.SocketCliente(jsonObject.toString());
+            String a = conn.SocketCliente(jsonObject.toString());
     }
 
     public void cambiarDirectorio() {
@@ -60,7 +62,7 @@ public class Remoto {
         //System.out.println("mensaje a enviar: " + jsonObject.toString());
 
         Conexion conn = new Conexion();
-        conn.SocketCliente(jsonObject.toString());
+        String a = conn.SocketCliente(jsonObject.toString());
 
     }
 
@@ -90,7 +92,7 @@ public class Remoto {
         jsonObject.put("tam", tamString);
 
         Conexion conn = new Conexion();
-        conn.SocketCliente(jsonObject.toString());
+        String a = conn.SocketCliente(jsonObject.toString());
 
         Conexion conn2 = new Conexion();
         conn2.enviarArchivo(rutitaNueva);
@@ -134,10 +136,13 @@ public class Remoto {
 
 
         Conexion conn = new Conexion();
-        conn.SocketCliente(jsonObject.toString());
+        String msj = conn.SocketCliente(jsonObject.toString());
+        JSONObject jsonObject1 = new JSONObject(msj);
+        String regreso = jsonObject1.getString("mensaje");
+        int tam = Integer.parseInt(regreso);
 
-//        Conexion conn2 = new Conexion();
-//        conn2.recibirArchivo(localPath, archivo);
+        Conexion conn2 = new Conexion();
+        conn2.recibirArchivo(localPath, archivo, tam);
     }
 
     public void getDirectorio() {
@@ -146,7 +151,7 @@ public class Remoto {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("opcion", "list0");
         //System.out.println("mensaje a enviar: " + jsonObject.toString());
-        conn.SocketCliente(jsonObject.toString());
+        String a = conn.SocketCliente(jsonObject.toString());
 
 
 

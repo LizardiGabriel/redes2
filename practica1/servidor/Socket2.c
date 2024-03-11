@@ -13,6 +13,7 @@
 
 #include "List.h"
 #include "Socket3.h"
+#include "Socket4.h"
 
 int iniciarSocket(int puerto) {
 
@@ -49,8 +50,6 @@ int iniciarSocket(int puerto) {
     // ruta directorio
     char *ruta = directorio();
     printf("Ruta inicial: %s\n", ruta);
-
-
 
     // Aceptar múltiples conexiones y manejarlas en bucle
     while (1) {
@@ -134,8 +133,6 @@ int iniciarSocket(int puerto) {
 
             int recibirAlgo = iniciarSocket3(8081, nombreOriginal, pasarTam, ruta);
 
-
-
         } else if (strcmp(clave, "get6") == 0) {
             char *nombreOriginal = opcJson("nombreOrig", mensaje);
 
@@ -153,6 +150,13 @@ int iniciarSocket(int puerto) {
             printf("tam: %d\n", tam);
             printf("contenido: %s\n", contenido);
             n = write(newsockfd, contenido, strlen(contenido));
+
+            close(newsockfd);
+
+            int envAlgo = iniciarSocket4(8082, rutaAbs, tam_archivo);
+            if (envAlgo == 0) {
+                printf("Archivo enviado c:\n");
+            }
 
         } else if (strcmp(clave, "list0") == 0) {
             char *contenido = directorioActual(ruta);
@@ -172,9 +176,7 @@ int iniciarSocket(int puerto) {
 
         // Cerrar el socket de comunicación con el cliente
 
- 
-            close(newsockfd);
-        
+        close(newsockfd);
     }
 
     close(sockfd);

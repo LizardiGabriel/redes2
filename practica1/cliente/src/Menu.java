@@ -113,7 +113,7 @@ public class Menu {
                     // Logica para enviar archivos o carpetas
                     remoto.enviarArchivo(localPath);
                     System.out.println("Archivo enviado exitosamente!!!!!");
-                    exit(2);
+                    exit(5);
 
 
 
@@ -121,7 +121,9 @@ public class Menu {
                     System.out.println("(get): ");
                     // Logica para recibir archivos o carpetas
                     remoto.recibirArchivo(localPath);
-                    break;
+                    System.out.println("Archivo recibido exitosamente!!!!!");
+                    exit(6);
+
                 case 7:
                     System.out.println("Saliendo de la aplicacion...");
 

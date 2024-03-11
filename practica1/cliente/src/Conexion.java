@@ -1,3 +1,5 @@
+import org.json.JSONObject;
+
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -10,8 +12,13 @@ public class Conexion {
     String hostName = "localhost";
     int portNumber = 8080;
     int portNumber2 = 8081;
+    int portNumber3 = 8082;
 
-    public void SocketCliente(String env){
+    public String SocketCliente(String env){
+        String regreso = "";
+        JSONObject jsonObject = new JSONObject();
+
+
 
 
         try{
@@ -31,6 +38,8 @@ public class Conexion {
 
             socket.close();
 
+            return mensaje;
+
 
         } catch (UnknownHostException e) {
             System.err.println(e.getMessage());
@@ -39,6 +48,7 @@ public class Conexion {
             System.err.println(e.getMessage());
 
         }
+        return "";
 
     }
 
@@ -108,15 +118,15 @@ public class Conexion {
         }
     }
 
-    public void recibirArchivo(String localPath, String archivo) {
+    public void recibirArchivo(String localPath, String archivo, int tamFile) {
         System.out.println("Recibiendo archivo...");
 
         try {
-            socket = new Socket(hostName, portNumber2);
+            socket = new Socket(hostName, portNumber3);
             InputStream inputStream = socket.getInputStream();
             BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
 
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[tamFile]; // Utilizar el tamaño especificado para el buffer
             int bytesRead;
             String ruta = localPath + "/" + archivo;
             FileOutputStream fileOutputStream = new FileOutputStream(ruta);
@@ -127,10 +137,6 @@ public class Conexion {
             }
             bufferedOutputStream.flush();
             System.out.println("Archivo recibido exitosamente");
-
-            // enviar respuesta
-            salida = new PrintWriter(socket.getOutputStream(), true);
-            salida.println("Archivo recibido exitosamente");
 
             // cerrar flujos y socket
             bufferedOutputStream.close();
@@ -147,4 +153,5 @@ public class Conexion {
             System.exit(1);
         }
     }
+
 }

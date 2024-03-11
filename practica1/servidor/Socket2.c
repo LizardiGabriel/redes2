@@ -50,11 +50,11 @@ int iniciarSocket(int puerto) {
     char *ruta = directorio();
     printf("Ruta inicial: %s\n", ruta);
 
-    int banderitaCerrado = 0;
+
 
     // Aceptar múltiples conexiones y manejarlas en bucle
     while (1) {
-        banderitaCerrado = 0;
+
         // Aceptar una conexión entrante y crear un nuevo socket para la comunicación
         clilen = sizeof(cli_addr);
         newsockfd = accept(sockfd, (struct sockaddr *)&cli_addr, &clilen);
@@ -131,11 +131,10 @@ int iniciarSocket(int puerto) {
             printf("tam para pasar: %d\n", pasarTam);
 
             close(newsockfd);
-            banderitaCerrado = 1;
 
             int recibirAlgo = iniciarSocket3(8081, nombreOriginal, pasarTam, ruta);
 
-            newsockfd = accept(sockfd, (struct sockaddr *)&cli_addr, &clilen);
+
 
         } else if (strcmp(clave, "get6") == 0) {
             char *nombreOriginal = opcJson("nombreOrig", mensaje);
@@ -173,7 +172,7 @@ int iniciarSocket(int puerto) {
 
         // Cerrar el socket de comunicación con el cliente
 
-        if (banderitaCerrado == 0) 
+ 
             close(newsockfd);
         
     }

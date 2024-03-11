@@ -113,7 +113,7 @@ public class Menu {
                     // Logica para enviar archivos o carpetas
                     remoto.enviarArchivo(localPath);
                     System.out.println("Archivo enviado exitosamente!!!!!");
-                    break;
+                    exit(2);
 
 
 

@@ -21,5 +21,12 @@ char *mkdirCarpeta(char *ruta, char *carpeta);
 
 char *rmdirAlgo(char *ruta, char *archivo);
 
+char *rutaAbsoluta(char *ruta, char *nombre);
+
+int existe(char *ruta);
+
+int calcularTamanito(char *ruta);
+
+
 
 #endif //SERVIDOR_LIST_H

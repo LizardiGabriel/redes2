@@ -6,14 +6,13 @@
 #include <string.h>
 
 #include <netinet/in.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
 
 #include "List.h"
+#include "Socket3.h"
 
 int iniciarSocket(int puerto) {
 
@@ -51,8 +50,11 @@ int iniciarSocket(int puerto) {
     char *ruta = directorio();
     printf("Ruta inicial: %s\n", ruta);
 
+    int banderitaCerrado = 0;
+
     // Aceptar múltiples conexiones y manejarlas en bucle
     while (1) {
+        banderitaCerrado = 0;
         // Aceptar una conexión entrante y crear un nuevo socket para la comunicación
         clilen = sizeof(cli_addr);
         newsockfd = accept(sockfd, (struct sockaddr *)&cli_addr, &clilen);
@@ -67,19 +69,11 @@ int iniciarSocket(int puerto) {
 
         memset(buffer, 0, 256);
         n = read(newsockfd, buffer, 255);
-        int veces = atoi(buffer);
-        printf("num de envios: %d\n", veces);
-        
-        memset(buffer, 0, 256);
-        n = read(newsockfd, buffer, 255);
-            if(n < 0)
-                printf("ERROR reading from socket\n"); 
+        if (n < 0)
+            printf("ERROR reading from socket\n");
         printf("Mensaje recibido del cliente: %s\n", buffer);
 
-
         char *mensaje = buffer;
-        //printf("Mensaje recibido del cliente: %s\n", mensaje);
-
         char *clave = opcJson("opcion", mensaje);
 
         if (strcmp(clave, "list1") == 0) {
@@ -122,16 +116,44 @@ int iniciarSocket(int puerto) {
             n = write(newsockfd, contenido, strlen(contenido));
 
         } else if (strcmp(clave, "put5") == 0) {
-            char *archivoZipJson = opcJson("archivo", mensaje);
-            char *tipo = opcJson("tipo", mensaje);
-            char *nombreOriginal = opcJson("nombre", mensaje);
-            char *contenido = recibido("recibi el mensaje del archivo zip que me mandaste en el json");
+            char *nombreOriginal = opcJson("nombreOrig", mensaje);
+            char *tama = opcJson("tam", mensaje);
+
+            printf("tam de archivo: %s bytes\n", tama);
+
+            char *contenido = recibido("recibi el mensaje del archivo zip");
             int tam = strlen(contenido);
             printf("tam: %d\n", tam);
             printf("contenido: %s\n", contenido);
             n = write(newsockfd, contenido, strlen(contenido));
 
+            int pasarTam = atoi(tama);
+            printf("tam para pasar: %d\n", pasarTam);
+
+            close(newsockfd);
+            banderitaCerrado = 1;
+
+            int recibirAlgo = iniciarSocket3(8081, nombreOriginal, pasarTam, ruta);
+
+            newsockfd = accept(sockfd, (struct sockaddr *)&cli_addr, &clilen);
+
         } else if (strcmp(clave, "get6") == 0) {
+            char *nombreOriginal = opcJson("nombreOrig", mensaje);
+
+            char *rutaAbs = rutaAbsoluta(ruta, nombreOriginal);
+
+            int existeRuta = existe(rutaAbs);
+            int tam_archivo = 0;
+            if (existeRuta) {
+                tam_archivo = calcularTamanito(rutaAbs);
+            }
+            char env_tam[20];
+            sprintf(env_tam, "%d", tam_archivo);
+            char *contenido = recibido(env_tam);
+            int tam = strlen(contenido);
+            printf("tam: %d\n", tam);
+            printf("contenido: %s\n", contenido);
+            n = write(newsockfd, contenido, strlen(contenido));
 
         } else if (strcmp(clave, "list0") == 0) {
             char *contenido = directorioActual(ruta);
@@ -150,8 +172,10 @@ int iniciarSocket(int puerto) {
         printf("===========================\n");
 
         // Cerrar el socket de comunicación con el cliente
+
+        if (banderitaCerrado == 0) 
+            close(newsockfd);
         
-        close(newsockfd);
     }
 
     close(sockfd);

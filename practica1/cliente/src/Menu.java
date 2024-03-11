@@ -5,7 +5,7 @@ import static java.lang.System.exit;
 
 public class Menu {
 
-    public void Menu() throws IOException {
+    public int Menu() throws IOException {
 
 
         Scanner scanner = new Scanner(System.in);
@@ -112,11 +112,15 @@ public class Menu {
                     System.out.println("(put): ");
                     // Logica para enviar archivos o carpetas
                     remoto.enviarArchivo(localPath);
+                    System.out.println("Archivo enviado exitosamente!!!!!");
                     break;
+
+
+
                 case 6:
                     System.out.println("(get): ");
                     // Logica para recibir archivos o carpetas
-                    remoto.recibirArchivo();
+                    remoto.recibirArchivo(localPath);
                     break;
                 case 7:
                     System.out.println("Saliendo de la aplicacion...");
@@ -133,6 +137,8 @@ public class Menu {
         } while (choice != 7);
 
         scanner.close();
+
+        return 0;
 
     }
 }

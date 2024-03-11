@@ -34,7 +34,7 @@ char *opcJson(char *opcion, char *msj){
 
     // Verificar si el campo "nombre" existe y es un string
     if (!nombre || !json_is_string(nombre)) {
-        fprintf(stderr, "Error: El campo 'nombre' no es un string o no existe.\n");
+        fprintf(stderr, "Error: por que no lee este json.\n");
         json_decref(root); // Liberar el JSON
         exit(1);
     }
@@ -398,5 +398,35 @@ char *rmdirAlgo(char *ruta, char *archivo){
     char *ret = recibido(mensaje);
     return ret;
 
+}
+
+char *rutaAbsoluta(char *ruta, char *nombre){
+    int tam = strlen(ruta) + 1 + strlen(nombre) + 1;
+    char *rutita = malloc(tam);
+    strcpy(rutita, ruta);
+    strcat(rutita, "/");
+    strcat(rutita, nombre);
+    printf("rutita de f rutaAbso: %s\n", rutita);
+    return rutita;
+}
+
+int existe(char *ruta){
+    
+    if (access(ruta, F_OK) != -1) {
+        return 1;
+    } else {
+        return 0;
+    }
+
+}
+
+int calcularTamanito(char *ruta){
+    // calcular el tamaño de un archivo con esta ruta
+    
+    struct stat st;
+    stat(ruta, &st);
+    int tam = st.st_size;
+    return tam;
+    
 }
 

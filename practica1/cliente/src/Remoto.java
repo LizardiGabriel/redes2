@@ -67,42 +67,37 @@ public class Remoto {
     public void enviarArchivo(String ruta) {
         System.out.print("Escribe el nombre del archivo que quieres enviar: ");
         Scanner scanner = new Scanner(System.in);
-
         String archivo = scanner.nextLine();
         String rutita = ruta + "/" + archivo;
         String rutitaNueva = ruta + "/"+ archivo+".zip";
 
         comprimir(rutita, rutitaNueva);
 
-        String enviar = fileToString(rutitaNueva);
+        File file = new File(rutitaNueva);
+        if (!file.exists()) {
+            System.err.println("El archivo no existe");
+            return;
+        }
+
+        // tam del archivo en bytes
+        long tam = file.length();
+
+        String tamString = String.valueOf(tam);
+
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("opcion", "put5");
-        jsonObject.put("archivo", enviar);
-        jsonObject.put("tipo", ".zip");
-        jsonObject.put("nombre", archivo);
-
-        System.out.println("mensaje a enviar: " + jsonObject.toString());
+        jsonObject.put("nombreOrig", archivo);
+        jsonObject.put("tam", tamString);
 
         Conexion conn = new Conexion();
         conn.SocketCliente(jsonObject.toString());
 
+        Conexion conn2 = new Conexion();
+        conn2.enviarArchivo(rutitaNueva);
+
     }
 
-    public String fileToString(String rutitaNueva) {
-        String content = null;
-        File file = new File(rutitaNueva); //for example
-        try {
-            FileInputStream fis = new FileInputStream(file);
-            byte[] data = new byte[(int) file.length()];
-            fis.read(data);
-            fis.close();
 
-            content = new String(data, "IBM852");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return content;
-    }
 
     void comprimir(String ruta, String rutaNueva) {
         try {
@@ -128,7 +123,21 @@ public class Remoto {
         }
     }
 
-    public void recibirArchivo() {
+    public void recibirArchivo(String localPath) {
+        System.out.print("Escribe el nombre del archivo que quieres recibir: ");
+        Scanner scanner = new Scanner(System.in);
+        String archivo = scanner.nextLine();
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("opcion", "get6");
+        jsonObject.put("nombreOrig", archivo);
+
+
+        Conexion conn = new Conexion();
+        conn.SocketCliente(jsonObject.toString());
+
+//        Conexion conn2 = new Conexion();
+//        conn2.recibirArchivo(localPath, archivo);
     }
 
     public void getDirectorio() {

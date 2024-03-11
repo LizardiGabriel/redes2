@@ -11,7 +11,11 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
         Menu menu = new Menu();
-        menu.Menu();
+        int opc = 1;
+        while(opc == 1){
+            opc = menu.Menu();
+        }
+
 
         }
     }

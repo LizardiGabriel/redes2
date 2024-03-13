@@ -5,7 +5,7 @@
 
 
 int main() {
-    int puerto = 8080;
+    int puerto = 1234;
     int ejecutar = iniciarSocket(puerto);
     return 0;
 }

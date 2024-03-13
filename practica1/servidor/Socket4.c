@@ -75,7 +75,9 @@ int iniciarSocket4(int puerto, char *rutaAbsoluta, int tam){
         if (send(newsockfd, buffer, bytesLeidos, 0) == -1) {
             perror("Error al enviar datos del archivo");
             fclose(file);
-            return -1;
+            close(newsockfd);
+            close(sockfd);
+            exit(1);
         }
     }
 

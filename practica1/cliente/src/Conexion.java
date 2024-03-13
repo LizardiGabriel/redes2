@@ -10,9 +10,9 @@ public class Conexion {
     private PrintWriter salida;
     private BufferedReader entrada;
     String hostName = "localhost";
-    int portNumber = 8080;
-    int portNumber2 = 8081;
-    int portNumber3 = 8082;
+    int portNumber = 1234;
+    int portNumber2 = 1235;
+    int portNumber3 = 1236;
 
     public String SocketCliente(String env){
         String regreso = "";

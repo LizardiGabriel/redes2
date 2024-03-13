@@ -79,8 +79,6 @@ int iniciarSocket3(int puerto, char *nombreArchivo, int tam, char *path){
         fwrite(buffer, 1, n, file);
         totalBytesRead += n;
     }
-    
-    fclose(file);
 
     if (n < 0) {
         perror("ERROR reading from socket");

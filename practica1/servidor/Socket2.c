@@ -129,9 +129,11 @@ int iniciarSocket(int puerto) {
             int pasarTam = atoi(tama);
             printf("tam para pasar: %d\n", pasarTam);
 
+            printf("close antes de opc5: %d\n", newsockfd);
             close(newsockfd);
+            printf("close despues de opc5: %d\n", newsockfd);
 
-            int recibirAlgo = iniciarSocket3(8081, nombreOriginal, pasarTam, ruta);
+            int recibirAlgo = iniciarSocket3(1235, nombreOriginal, pasarTam, ruta);
 
         } else if (strcmp(clave, "get6") == 0) {
             char *nombreOriginal = opcJson("nombreOrig", mensaje);
@@ -151,9 +153,11 @@ int iniciarSocket(int puerto) {
             printf("contenido: %s\n", contenido);
             n = write(newsockfd, contenido, strlen(contenido));
 
+            printf("close antes de opc6: %d\n", newsockfd);
             close(newsockfd);
+            printf("close despues de opc6: %d\n", newsockfd);
 
-            int envAlgo = iniciarSocket4(8082, rutaAbs, tam_archivo);
+            int envAlgo = iniciarSocket4(1236, rutaAbs, tam_archivo);
             if (envAlgo == 0) {
                 printf("Archivo enviado c:\n");
             }
@@ -176,7 +180,9 @@ int iniciarSocket(int puerto) {
 
         // Cerrar el socket de comunicación con el cliente
 
+        printf("close antes de while: %d\n", newsockfd);
         close(newsockfd);
+        printf("close despues de while: %d\n", newsockfd);
     }
 
     close(sockfd);

@@ -27,8 +27,6 @@ public class Conexion {
             entrada = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             salida = new PrintWriter(socket.getOutputStream(), true);
 
-            int tam = env.length();
-            salida.println(tam);
             salida.println(env);
 
             String mensaje = entrada.readLine();

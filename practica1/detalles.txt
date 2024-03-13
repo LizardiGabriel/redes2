@@ -1,4 +1,4 @@
-Practica 1 aplicación de almacenamiento remoto de archivos
+Almacenamiento remoto de archivos
 
 Implementar una aplicación cliente - servidor que permita al usuario 
 
@@ -13,10 +13,5 @@ Implementar una aplicación cliente - servidor que permita al usuario
 
 
 
-brew install json-c
-/opt/homebrew/Cellar/json-c/0.17
-#include <json.h>
-$ clang -I/usr/include/json-c/ -o test test.c -ljson-c
-
-
-The documentation is available online: https://json-c.github.io/json-c/ Files json_object.c and/or json_tokener.c is most likely w
+Ejecutar el servidor en C (Jansson.h y zlib.h)
+Ejecutar el cliente en java (org.json.jar)

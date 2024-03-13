@@ -51,8 +51,11 @@ int iniciarSocket(int puerto) {
     char *ruta = directorio();
     printf("Ruta inicial: %s\n", ruta);
 
+    int solicitud = 0;
+
     // Aceptar múltiples conexiones y manejarlas en bucle
     while (1) {
+        printf("soliciutd: %d\n", solicitud);
 
         // Aceptar una conexión entrante y crear un nuevo socket para la comunicación
         clilen = sizeof(cli_addr);
@@ -60,11 +63,6 @@ int iniciarSocket(int puerto) {
         if (newsockfd < 0)
             printf("ERROR on accept\n");
 
-        // leer tam del mensaje
-        memset(buffer, 0, 256);
-        n = read(newsockfd, buffer, 255);
-        long int tam = atoi(buffer);
-        printf("recibi el tam: %ld\n", tam);
 
         memset(buffer, 0, 256);
         n = read(newsockfd, buffer, 255);
@@ -183,6 +181,8 @@ int iniciarSocket(int puerto) {
         printf("close antes de while: %d\n", newsockfd);
         close(newsockfd);
         printf("close despues de while: %d\n", newsockfd);
+
+        solicitud++;
     }
 
     close(sockfd);

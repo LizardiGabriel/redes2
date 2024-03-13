@@ -15,3 +15,28 @@ Implementar una aplicación cliente - servidor que permita al usuario
 
 Ejecutar el servidor en C (Jansson.h y zlib.h)
 Ejecutar el cliente en java (org.json.jar)
+
+
+
+// instalar Jansson.h -> descargar la libreria
+
+tar -xvzf jansson-2.13.tar.gz
+cd jansson-2.13
+
+mkdir build
+cd build
+cmake 
+
+make ..
+make check
+make install
+
+// instalar zlib (en ubuntu) -> descargar libreria
+
+
+// tener org json para el cliente
+
+
+//Para compilar el servidor 
+gcc -o prueba servidor.c -ljansson
+

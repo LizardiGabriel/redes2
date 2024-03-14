@@ -18,7 +18,7 @@ Ejecutar el cliente en java (org.json.jar)
 
 
 
-// instalar Jansson.h -> descargar la libreria
+// instalar Jansson.h -> descargar la libreria para el servidor
 
 tar -xvzf jansson-2.13.tar.gz
 cd jansson-2.13
@@ -31,10 +31,16 @@ make ..
 make check
 make install
 
-// instalar zlib (en ubuntu) -> descargar libreria
+// instalar zlib (en ubuntu) -> descargar libreria para el servidor
 
 
-// tener org json para el cliente
+// importar libreria org json para el cliente
+
+
+
+Cambiar la ip en cliente/src/Conexion.java
+
+En cliente y servidor se usan los puertos 1234, 1235, 1236
 
 
 //Para compilar el servidor 

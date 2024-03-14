@@ -9,7 +9,7 @@ public class Conexion {
     private Socket socket;
     private PrintWriter salida;
     private BufferedReader entrada;
-    String hostName = "localhost";
+    String hostName = "192.168.0.155";
     int portNumber = 1234;
     int portNumber2 = 1235;
     int portNumber3 = 1236;

@@ -23,13 +23,13 @@ public class Menu {
             System.out.println("path local: " + localPath);
 
             System.out.println("=========== Menu ===========");
-            System.out.println("1. Listar el contenido del folder local o remotamente (list)");
-            System.out.println("2. Crear carpetas Local o remotamente (mkdir)");
-            System.out.println("3. Eliminar carpetas/archivos local o remotamente (rmdir)");
-            System.out.println("4. Cambiar la ruta de directorio local o remoto (cd)");
-            System.out.println("5. Enviar archivos o carpetas al servidor (put)");
-            System.out.println("6. Recibir archivos o carpetas desde el servidor(get)");
-            System.out.println("7. Salir de la aplicacion (quit)");
+            System.out.println("1. (list) Listar el contenido del folder local o remotamente");
+            System.out.println("2. (mkdir) Crear carpetas Local o remotamente");
+            System.out.println("3. (rmdir) Eliminar carpetas/archivos local o remotamente");
+            System.out.println("4. (cd) Cambiar la ruta de directorio local o remoto");
+            System.out.println("5. (put) Enviar archivos o carpetas al servidor");
+            System.out.println("6. (get) Recibir archivos o carpetas desde el servidor");
+            System.out.println("7. (quit) Salir de la aplicacion");
             System.out.println("=============================");
             System.out.print("Por favor, selecciona una opcion: ");
             try {

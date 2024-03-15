@@ -68,35 +68,33 @@ int iniciarSocket(int puerto) {
         n = read(newsockfd, buffer, 255);
         if (n < 0)
             printf("ERROR reading from socket\n");
-        printf("Mensaje recibido del cliente: %s\n", buffer);
+        //printf("Mensaje recibido del cliente: %s\n", buffer);
 
         char *mensaje = buffer;
         char *clave = opcJson("opcion", mensaje);
+        printf("Clave: %s\n", clave);
 
         if (strcmp(clave, "list1") == 0) {
             char *contenido = listarContenido(ruta);
-            int tam = strlen(contenido);
-            printf("tam: %d\n", tam);
             printf("contenido: %s\n", contenido);
             n = write(newsockfd, contenido, strlen(contenido));
 
+
         } else if (strcmp(clave, "mkdir2") == 0) {
             char *carpetaNueva = opcJson("carpeta", mensaje);
-            char *resMkdir = mkdirCarpeta(ruta, carpetaNueva);
 
-            int tam = strlen(resMkdir);
-            printf("tam: %d\n", tam);
+            char *resMkdir = mkdirCarpeta(ruta, carpetaNueva);
             printf("contenido: %s\n", resMkdir);
             n = write(newsockfd, resMkdir, strlen(resMkdir));
 
+
         } else if (strcmp(clave, "rmdir3") == 0) {
             char *borrarAlgo = opcJson("archivo", mensaje);
-            char *resRmdir = rmdirAlgo(ruta, borrarAlgo);
 
-            int tam = strlen(resRmdir);
-            printf("tam: %d\n", tam);
+            char *resRmdir = rmdirAlgo(ruta, borrarAlgo);
             printf("contenido: %s\n", resRmdir);
             n = write(newsockfd, resRmdir, strlen(resRmdir));
+
 
         } else if (strcmp(clave, "cd4") == 0) {
             char *ruta_nueva = opcJson("carpeta", mensaje);
@@ -107,35 +105,33 @@ int iniciarSocket(int puerto) {
             printf("Ruta nuevecita: %s\n", ruta);
 
             char *contenido = cambiarDirectorio(ruta);
-            int tam = strlen(contenido);
-            printf("tam: %d\n", tam);
             printf("contenido: %s\n", contenido);
             n = write(newsockfd, contenido, strlen(contenido));
+
 
         } else if (strcmp(clave, "put5") == 0) {
             char *nombreOriginal = opcJson("nombreOrig", mensaje);
             char *tama = opcJson("tam", mensaje);
-
             printf("tam de archivo: %s bytes\n", tama);
 
-            char *contenido = recibido("recibi el mensaje del archivo zip");
-            int tam = strlen(contenido);
-            printf("tam: %d\n", tam);
+            char *contenido = recibido("recibi el msj del archivo");            
             printf("contenido: %s\n", contenido);
             n = write(newsockfd, contenido, strlen(contenido));
+
 
             int pasarTam = atoi(tama);
             printf("tam para pasar: %d\n", pasarTam);
 
-            printf("close antes de opc5: %d\n", newsockfd);
-            close(newsockfd);
-            printf("close despues de opc5: %d\n", newsockfd);
-
+            int intClose5 = close(newsockfd);
+            printf("close despues de opc5: %d\n", intClose5);
             int recibirAlgo = iniciarSocket3(1235, nombreOriginal, pasarTam, ruta);
+            if (recibirAlgo == 0) {
+                printf("Archivo recibido c:\n");
+            }
+
 
         } else if (strcmp(clave, "get6") == 0) {
             char *nombreOriginal = opcJson("nombreOrig", mensaje);
-
             char *rutaAbs = rutaAbsoluta(ruta, nombreOriginal);
 
             int existeRuta = existe(rutaAbs);
@@ -145,15 +141,14 @@ int iniciarSocket(int puerto) {
             }
             char env_tam[20];
             sprintf(env_tam, "%d", tam_archivo);
+            
             char *contenido = recibido(env_tam);
-            int tam = strlen(contenido);
-            printf("tam: %d\n", tam);
             printf("contenido: %s\n", contenido);
             n = write(newsockfd, contenido, strlen(contenido));
 
-            printf("close antes de opc6: %d\n", newsockfd);
-            close(newsockfd);
-            printf("close despues de opc6: %d\n", newsockfd);
+
+            int intClose6 = close(newsockfd);
+            printf("close despues de opc6: %d\n", intClose6);
 
             int envAlgo = iniciarSocket4(1236, rutaAbs, tam_archivo);
             if (envAlgo == 0) {
@@ -162,10 +157,10 @@ int iniciarSocket(int puerto) {
 
         } else if (strcmp(clave, "list0") == 0) {
             char *contenido = directorioActual(ruta);
-            int tam = strlen(contenido);
-            printf("tam: %d\n", tam);
             printf("contenido: %s\n", contenido);
             n = write(newsockfd, contenido, strlen(contenido));
+
+            
         } else {
             printf("---------->Comando no reconocido :c <----------\n");
             n = write(newsockfd, "Comando no reconocido", 21);
@@ -178,9 +173,9 @@ int iniciarSocket(int puerto) {
 
         // Cerrar el socket de comunicación con el cliente
 
-        printf("close antes de while: %d\n", newsockfd);
-        close(newsockfd);
-        printf("close despues de while: %d\n", newsockfd);
+
+        int intCloseW = close(newsockfd);
+        printf("close despues de while: %d\n", intCloseW);
 
         solicitud++;
     }

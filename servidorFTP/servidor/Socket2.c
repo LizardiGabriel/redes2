@@ -53,8 +53,12 @@ int iniciarSocket(int puerto) {
 
     int solicitud = 0;
 
+    int cerrarYN = 0;
+    int cerradito = 1;
+
     // Aceptar múltiples conexiones y manejarlas en bucle
     while (1) {
+        printf("===========================\n");
         printf("soliciutd: %d\n", solicitud);
 
         // Aceptar una conexión entrante y crear un nuevo socket para la comunicación
@@ -75,7 +79,7 @@ int iniciarSocket(int puerto) {
         printf("Clave: %s\n", clave);
 
         if (strcmp(clave, "list1") == 0) {
-            char *contenido = listarContenido(ruta);
+            char *contenido = generarList1(ruta);
             printf("contenido: %s\n", contenido);
             n = write(newsockfd, contenido, strlen(contenido));
 
@@ -122,8 +126,12 @@ int iniciarSocket(int puerto) {
             int pasarTam = atoi(tama);
             printf("tam para pasar: %d\n", pasarTam);
 
-            int intClose5 = close(newsockfd);
-            printf("close despues de opc5: %d\n", intClose5);
+
+
+            cerradito = close(newsockfd);
+            if(cerradito == 0)
+                cerrarYN = 1;
+            
             int recibirAlgo = iniciarSocket3(1235, nombreOriginal, pasarTam, ruta);
             if (recibirAlgo == 0) {
                 printf("Archivo recibido c:\n");
@@ -147,8 +155,9 @@ int iniciarSocket(int puerto) {
             n = write(newsockfd, contenido, strlen(contenido));
 
 
-            int intClose6 = close(newsockfd);
-            printf("close despues de opc6: %d\n", intClose6);
+            cerradito = close(newsockfd);
+            if(cerradito == 0)
+                cerrarYN = 1;
 
             int envAlgo = iniciarSocket4(1236, rutaAbs, tam_archivo);
             if (envAlgo == 0) {
@@ -169,13 +178,14 @@ int iniciarSocket(int puerto) {
         if (n < 0)
             printf("ERROR writing to socket\n");
         printf("Mensaje enviado al cliente\n\n");
-        printf("===========================\n");
+        
 
         // Cerrar el socket de comunicación con el cliente
 
-
-        int intCloseW = close(newsockfd);
-        printf("close despues de while: %d\n", intCloseW);
+        if(cerrarYN == 0)
+            close(newsockfd);
+        cerradito = 1;
+        cerrarYN = 0;
 
         solicitud++;
     }

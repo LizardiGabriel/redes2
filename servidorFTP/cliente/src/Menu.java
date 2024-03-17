@@ -30,6 +30,7 @@ public class Menu {
             System.out.println("5. (put) Enviar archivos o carpetas al servidor");
             System.out.println("6. (get) Recibir archivos o carpetas desde el servidor");
             System.out.println("7. (quit) Salir de la aplicacion");
+            System.out.println("8. (clear)");
             System.out.println("=============================");
             System.out.print("Por favor, selecciona una opcion: ");
             try {
@@ -39,7 +40,7 @@ public class Menu {
                 exit(1);
             }
 
-            if((choice != 7) && (choice != 5) && (choice != 6)){
+            if((choice != 7) && (choice != 5) && (choice != 6) && (choice != 8)){
                 System.out.println("1. Local");
                 System.out.println("2. Remoto");
                 System.out.print("Por favor, selecciona una opcion: ");
@@ -59,7 +60,7 @@ public class Menu {
 
                     if (choiceList == 1) {
                         System.out.println("local");
-                        local.listarContenido();
+                        local.listarContenido(localPath);
 
                     } else if (choiceList == 2) {
                         System.out.println("remotamente");
@@ -126,13 +127,19 @@ public class Menu {
 
                 case 7:
                     System.out.println("Saliendo de la aplicacion...");
-
-
-
+                    break;
+                case 8:
+                    final String os = System.getProperty("os.name");
+                    System.out.println("sistem: " + os);
+                    if(os.contains("Windows")){
+                        Runtime.getRuntime().exec("cls");
+                    }else{
+                        Runtime.getRuntime().exec("clear");
+                    }
+                    
                     break;
                 default:
                     System.out.println("Opcion no valida. Por favor, selecciona una opcion del menu.");
-                    exit(0);
                     break;
             }
 

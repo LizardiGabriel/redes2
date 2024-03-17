@@ -3,13 +3,15 @@
 #define SERVIDOR_LIST_H
 
 #include "List.c"
+//list0
+char *directorio();
 
+//
 
 char *listarContenido(char *ruta);
 
 char *directorioActual(char *ruta);
 
-char *directorio();
 
 char *cambiarDirectorio(char *ruta);
 
@@ -26,6 +28,15 @@ char *rutaAbsoluta(char *ruta, char *nombre);
 int existe(char *ruta);
 
 int calcularTamanito(char *ruta);
+
+// List 1
+char *recorrerDirectorio(char *ruta);
+void verificar(char *msj);
+char *generarList1(char *ruta);
+
+//
+
+
 
 
 

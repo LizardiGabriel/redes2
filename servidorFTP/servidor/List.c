@@ -232,6 +232,25 @@ char *directorio() {
         perror("Error al obtener el directorio actual");
         exit(1);
     }
+    int tam_nuevo = strlen(directorio) + strlen("carpetita") + 1;
+    directorio = (char *)realloc(directorio, tam_nuevo);
+    strcat(directorio, "/");
+    strcat(directorio, "carpetita");
+    
+    DIR *dir = opendir(directorio);
+    if (dir) {
+        closedir(dir);
+    } else  {
+        mkdir(directorio, 0777);
+        DIR *dir1 = opendir(directorio);
+        if (dir1) {
+            closedir(dir1);
+        } else {
+            perror("Error al crear el directorio");
+            exit(1);
+        }
+
+    } 
     return directorio;
 }
 
@@ -429,4 +448,94 @@ int calcularTamanito(char *ruta){
     return tam;
     
 }
+
+char *recorrerDirectorio(char *ruta) {
+    DIR *dir;
+    struct dirent *entry;
+    int tam = 0;
+    char *retornar = (char *)malloc(1000 * sizeof(char));
+    retornar[0] = '\0';
+
+    if (!(dir = opendir(ruta))) {
+        perror("opendir");
+        exit(1);
+    }
+
+    while ((entry = readdir(dir)) != NULL) {
+        char full_path[1024];
+        snprintf(full_path, sizeof(full_path), "%s/%s", ruta, entry->d_name);
+
+        if (entry->d_type == DT_DIR) {
+            if (strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0) {
+                strcat(retornar, "{\"fldr\":\"");
+                strcat(retornar, entry->d_name);
+                strcat(retornar, "\",\"cont\":[");
+                char *subdir = recorrerDirectorio(full_path);
+                int subdir_len = strlen(subdir);
+                if (subdir_len > 0 && subdir[subdir_len - 1] == ',') {
+                    subdir[subdir_len - 1] = '\0'; // remove the trailing comma
+                }
+                strcat(retornar, subdir);
+                strcat(retornar, "]},");
+            }
+        } else {
+            strcat(retornar, "{\"file\":\"");
+            strcat(retornar, entry->d_name);
+            strcat(retornar, "\"},");
+        }
+    }
+
+    closedir(dir);
+    int len = strlen(retornar);
+    if (len > 0 && retornar[len - 1] == ',') {
+        retornar[len - 1] = '\0'; // remove the trailing comma
+    }
+    return retornar;
+}
+
+
+
+char *generarList1(char *ruta){
+
+    char *obt = recorrerDirectorio(ruta);
+    int tam = strlen(obt);
+    char *obt2 = (char *)malloc((tam + 50) * sizeof(char));
+    obt2[0] = '\0';
+    strcat(obt2, "{");
+    strcat(obt2, "\"fldr\":\"");
+    strcat(obt2, ruta);
+    strcat(obt2, "\",\"cont\":[");
+    strcat(obt2, obt);
+    strcat(obt2, "]");
+    strcat(obt2, "}");
+
+    return obt2;
+
+
+}
+
+void verificar(char *msj) {
+
+    json_error_t error;
+    json_t *root = json_loads(msj, 0, &error);
+
+    // Verificar que la cadena sea u njson sin errores
+
+    if (!root) {
+        fprintf(stderr, "error: en la linea %d: %s\n", error.line, error.text);
+        exit(1);
+    }
+
+    // Verificar que la raíz sea un objeto
+    if (!json_is_object(root)) {
+        fprintf(stderr, "error: raíz no es un objeto\n");
+        json_decref(root);
+        exit(1);
+    }
+
+    printf("soy valido\n");
+}
+
+
+
 

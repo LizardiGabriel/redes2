@@ -23,6 +23,12 @@ public class Remoto {
         //System.out.println("mensaje a enviar: " + jsonObject.toString());
         String a = conn.SocketCliente(jsonObject.toString());
 
+        System.out.println("Contenido del directorio remoto: ");
+
+        JsonToString pasar = new JsonToString();
+        pasar.list(a);
+
+
     }
 
     public void crearCarpeta() {
@@ -36,6 +42,8 @@ public class Remoto {
         jsonObject.put("opcion", "mkdir2");
         jsonObject.put("carpeta", carpeta);
         String a = conn.SocketCliente(jsonObject.toString());
+        JsonToString pasar = new JsonToString();
+        pasar.leer(a);
 
     }
 
@@ -50,6 +58,8 @@ public class Remoto {
         jsonObject.put("opcion", "rmdir3");
         jsonObject.put("archivo", archivo);
         String a = conn.SocketCliente(jsonObject.toString());
+        JsonToString pasar = new JsonToString();
+        pasar.leer(a);
     }
 
     public void cambiarDirectorio() {
@@ -65,6 +75,8 @@ public class Remoto {
 
         Conexion conn = new Conexion();
         String a = conn.SocketCliente(jsonObject.toString());
+        JsonToString pasar = new JsonToString();
+        pasar.leer(a);
 
     }
 
@@ -96,6 +108,9 @@ public class Remoto {
 
         Conexion conn = new Conexion();
         String a = conn.SocketCliente(jsonObject.toString());
+        JsonToString pasar = new JsonToString();
+        pasar.leer(a);
+
 
         Conexion conn2 = new Conexion();
         conn2.enviarArchivo(rutitaNueva);
@@ -164,6 +179,9 @@ public class Remoto {
 
         Conexion conn = new Conexion();
         String msj = conn.SocketCliente(jsonObject.toString());
+        JsonToString pasar = new JsonToString();
+        pasar.leer(msj);
+
         JSONObject jsonObject1 = new JSONObject(msj);
         String regreso = jsonObject1.getString("mensaje");
         String tipo = jsonObject1.getString("typeFile");
@@ -180,6 +198,8 @@ public class Remoto {
         jsonObject.put("opcion", "list0");
         //System.out.println("mensaje a enviar: " + jsonObject.toString());
         String a = conn.SocketCliente(jsonObject.toString());
+        JsonToString pasar = new JsonToString();
+        pasar.leer(a);
 
 
 

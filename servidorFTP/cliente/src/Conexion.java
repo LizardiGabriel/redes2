@@ -34,8 +34,7 @@ public class Conexion {
 
             String mensaje = entrada.readLine();
             System.out.println("\n");
-            JsonToString pasar = new JsonToString();
-            pasar.leer(mensaje);
+
 
             socket.close();
 

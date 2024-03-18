@@ -56,7 +56,34 @@ public class JsonToString {
 
     }
 
+    public void list(String a){
+
+        try {
+            JSONObject json = new JSONObject(a);
+            listado(json, 0);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
 
 
+    public void listado(JSONObject json, int nivel) throws JSONException{
 
+        if (json.has("fldr")) {
+            System.out.println("  /".repeat(nivel) + json.getString("fldr"));
+        }
+        if (json.has("cont")) {
+            JSONArray cont = json.getJSONArray("cont");
+            for (int i = 0; i < cont.length(); i++) {
+                JSONObject item = cont.getJSONObject(i);
+                if (item.has("file")) {
+                    System.out.println("   ".repeat(nivel + 1) + item.getString("file"));
+                } else {
+                    listado(item, nivel + 1);
+                }
+            }
+        }
+
+    }
 }

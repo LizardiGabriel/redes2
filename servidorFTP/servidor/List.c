@@ -546,6 +546,7 @@ char *recorrerDirectorio(char *ruta) {
     }
 
     closedir(dir);
+    printf("close dir pipipi\n");
     int len = strlen(retornar);
     if (len > 0 && retornar[len - 1] == ',') {
         retornar[len - 1] = '\0'; // remove the trailing comma

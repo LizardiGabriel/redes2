@@ -6,6 +6,7 @@ public class Local {
         // ver los archivos o carpetas almacenadas en la carpeta donde se esta ejecutando la aplicacion java
         String ruta = localPath;
 
+        System.out.println("\nContenido del directorio local: \n");
         imprimirDirectorio(ruta, "--");
 
 

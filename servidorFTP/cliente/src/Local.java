@@ -7,7 +7,8 @@ public class Local {
         String ruta = localPath;
 
         System.out.println("\nContenido del directorio local: \n");
-        imprimirDirectorio(ruta, "--");
+        System.out.println(ruta);
+        imprimirDirectorio(ruta, "  ");
 
 
 
@@ -48,25 +49,28 @@ public class Local {
     }
 
 
-        public static void imprimirDirectorio(String ruta, String espacio) {
-            File dir = new File(ruta);
-            File[] files = dir.listFiles();
+    public static void imprimirDirectorio(String ruta, String espacio) {
+        File dir = new File(ruta);
+        File[] files = dir.listFiles();
 
-            if (files == null) {
-                System.err.println("Error: No se puede acceder al directorio " + ruta);
-                return;
-            }
+        if (files == null) {
+            System.err.println("Error: No se puede acceder al directorio " + ruta);
+            return;
+        }
 
-            for (File file : files) {
-                if (file.isDirectory()) {
-                    System.out.println(espacio + "\"fldr\": \"" + file.getName() + "\"");
-                    System.out.println(espacio + "\"cont\": ");
-                    imprimirDirectorio(file.getAbsolutePath(), espacio + "    ");
-                } else {
-                    System.out.println(espacio + "\"file\": \"" + file.getName() + "\"");
-                }
+        for (File file : files) {
+            if (file.isFile()) {
+                System.out.println(espacio  + file.getName());
             }
+        }
+
+        for (File file : files) {
+            if (file.isDirectory()) {
+                System.out.println(espacio  + file.getName() + "/");
+                imprimirDirectorio(file.getAbsolutePath(), espacio + "  ");
             }
+        }
+    }
 
 
 

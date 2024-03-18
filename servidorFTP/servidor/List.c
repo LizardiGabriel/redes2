@@ -18,7 +18,7 @@
 
 #include <zlib.h>
 
-char *opcJson(char *opcion, char *msj){
+char *opcJson(char *opcion, char *msj) {
 
     json_error_t error;
     json_t *root = json_loads(msj, 0, &error);
@@ -43,7 +43,7 @@ char *opcJson(char *opcion, char *msj){
     const char *nombre_value = json_string_value(nombre);
 
     // Imprimir el valor del campo "nombre"
-    //printf("El nombre es: %s\n", nombre_value);
+    // printf("El nombre es: %s\n", nombre_value);
 
     char *ret = malloc(strlen(nombre_value) + 1);
     strcpy(ret, nombre_value);
@@ -52,11 +52,7 @@ char *opcJson(char *opcion, char *msj){
     json_decref(root);
 
     return ret;
-
 }
-
-
-
 
 char *listarContenido(char *ruta) {
 
@@ -236,11 +232,11 @@ char *directorio() {
     directorio = (char *)realloc(directorio, tam_nuevo);
     strcat(directorio, "/");
     strcat(directorio, "carpetita");
-    
+
     DIR *dir = opendir(directorio);
     if (dir) {
         closedir(dir);
-    } else  {
+    } else {
         mkdir(directorio, 0777);
         DIR *dir1 = opendir(directorio);
         if (dir1) {
@@ -249,8 +245,7 @@ char *directorio() {
             perror("Error al crear el directorio");
             exit(1);
         }
-
-    } 
+    }
     return directorio;
 }
 
@@ -315,6 +310,68 @@ char *cambiarDirectorio(char *ruta) {
     free(jsonString);
 }
 
+char *mandarFileFldr(char *mensaje, int typeFile) {
+    // Crear un objeto JSON raíz
+    json_t *jsonRoot = json_object();
+    if (jsonRoot == NULL) {
+        fprintf(stderr, "Error al crear el objeto JSON raíz\n");
+        exit(1);
+    }
+
+    // Crear un objeto JSON de tipo arreglo para almacenar los nombres de los archivos
+    json_t *jsonArray = json_array();
+    if (jsonArray == NULL) {
+        fprintf(stderr, "Error al crear el objeto JSON\n");
+        json_decref(jsonRoot);
+        exit(1);
+    }
+
+    // Crear un objeto JSON para almacenar la ruta del directorio
+    json_t *jsonString0 = json_string(mensaje);
+    if (jsonString0 == NULL) {
+        fprintf(stderr, "Error al crear el string JSON\n");
+        json_decref(jsonArray);
+        exit(1);
+    }
+    // Añadir el arreglo JSON al objeto raíz
+    json_object_set_new(jsonRoot, "mensaje", jsonString0);
+
+    if (typeFile == 0) {
+        json_t *jsonString1 = json_string("file");
+        if (jsonString1 == NULL) {
+            fprintf(stderr, "Error al crear el string JSON\n");
+            json_decref(jsonArray);
+            exit(1);
+        }
+        // Añadir el arreglo JSON al objeto raíz
+        json_object_set_new(jsonRoot, "typeFile", jsonString1);
+    } else {
+        json_t *jsonString1 = json_string("fldr");
+        if (jsonString1 == NULL) {
+            fprintf(stderr, "Error al crear el string JSON\n");
+            json_decref(jsonArray);
+            exit(1);
+        }
+        // Añadir el arreglo JSON al objeto raíz
+        json_object_set_new(jsonRoot, "typeFile", jsonString1);
+    }
+
+    // Convertir el objeto JSON en una cadena JSON formateada
+    char *jsonString = json_dumps(jsonRoot, JSON_COMPACT);
+    if (jsonString == NULL) {
+        fprintf(stderr, "Error al convertir el objeto JSON raíz a cadena\n");
+        json_decref(jsonRoot);
+        exit(1);
+    }
+
+    return jsonString;
+
+    // Liberar la memoria asignada para el objeto JSON y la cadena JSON
+    json_decref(jsonRoot);
+    json_decref(jsonArray);
+    free(jsonString);
+}
+
 char *recibido(char *mensaje) {
     // Crear un objeto JSON raíz
     json_t *jsonRoot = json_object();
@@ -357,8 +414,7 @@ char *recibido(char *mensaje) {
     free(jsonString);
 }
 
-
-char *mkdirCarpeta(char *ruta, char *carpeta){
+char *mkdirCarpeta(char *ruta, char *carpeta) {
     int tam = strlen(ruta) + 1 + strlen(carpeta) + 1;
     char *rutita = malloc(tam);
     strcpy(rutita, ruta);
@@ -378,7 +434,7 @@ char *mkdirCarpeta(char *ruta, char *carpeta){
     return ret;
 }
 
-char *rmdirAlgo(char *ruta, char *archivo){
+char *rmdirAlgo(char *ruta, char *archivo) {
 
     char *mensaje;
 
@@ -390,21 +446,28 @@ char *rmdirAlgo(char *ruta, char *archivo){
     printf("rutita a borrar: %s\n", rutita);
 
     if (access(rutita, F_OK) != -1) {
+        // checae si rutita es un fldr o un file
+        struct stat st;
+        stat(rutita, &st);
+        if (S_ISDIR(st.st_mode)) {
+            // es un fldr
+            int tamCmnd2 = strlen(rutita) + 8;
+            char *comando2 = (char *)malloc(tamCmnd2 * sizeof(char));
+            strcpy(comando2, "rm -r ");
+            strcat(comando2, rutita);
+            system(comando2);
+            free(comando2);
+            mensaje = "--> Carpeta eliminada";
+            
 
-        if (remove(rutita) == 0) {
-            tam = strlen("Se ha eliminado: ") + strlen(rutita) + 1;
-            mensaje = malloc(tam);
-            strcpy(mensaje, "Se ha eliminado: ");
-            strcat(mensaje, rutita);
-            printf("mensaje: %s\n", mensaje);
-                            
         } else {
-            tam = strlen("Error al eliminar: ") + strlen(rutita) + 1;
-            mensaje = malloc(tam);
-            strcpy(mensaje, "Error al eliminar: ");
-            strcat(mensaje, rutita);
-            printf("mensaje: %s\n", mensaje);
-
+            // es un file
+            int res = remove(rutita);
+            if (res == 0) {
+                mensaje = "--> Archivo eliminado";
+            } else {
+                mensaje = "Error al eliminar el archivo";
+            }
         }
     } else {
         tam = strlen("No existe: ") + strlen(rutita) + 1;
@@ -416,10 +479,9 @@ char *rmdirAlgo(char *ruta, char *archivo){
 
     char *ret = recibido(mensaje);
     return ret;
-
 }
 
-char *rutaAbsoluta(char *ruta, char *nombre){
+char *rutaAbsoluta(char *ruta, char *nombre) {
     int tam = strlen(ruta) + 1 + strlen(nombre) + 1;
     char *rutita = malloc(tam);
     strcpy(rutita, ruta);
@@ -429,24 +491,22 @@ char *rutaAbsoluta(char *ruta, char *nombre){
     return rutita;
 }
 
-int existe(char *ruta){
-    
+int existe(char *ruta) {
+
     if (access(ruta, F_OK) != -1) {
         return 1;
     } else {
         return 0;
     }
-
 }
 
-int calcularTamanito(char *ruta){
+int calcularTamanito(char *ruta) {
     // calcular el tamaño de un archivo con esta ruta
-    
+
     struct stat st;
     stat(ruta, &st);
     int tam = st.st_size;
     return tam;
-    
 }
 
 char *recorrerDirectorio(char *ruta) {
@@ -493,9 +553,7 @@ char *recorrerDirectorio(char *ruta) {
     return retornar;
 }
 
-
-
-char *generarList1(char *ruta){
+char *generarList1(char *ruta) {
 
     char *obt = recorrerDirectorio(ruta);
     int tam = strlen(obt);
@@ -510,8 +568,6 @@ char *generarList1(char *ruta){
     strcat(obt2, "}");
 
     return obt2;
-
-
 }
 
 void verificar(char *msj) {
@@ -535,7 +591,3 @@ void verificar(char *msj) {
 
     printf("soy valido\n");
 }
-
-
-
-

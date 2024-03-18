@@ -35,6 +35,7 @@ void verificar(char *msj);
 char *generarList1(char *ruta);
 
 //
+char *mandarFileFldr(char *mensaje, int typeFile);
 
 
 

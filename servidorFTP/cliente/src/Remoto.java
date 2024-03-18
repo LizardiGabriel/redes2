@@ -166,10 +166,11 @@ public class Remoto {
         String msj = conn.SocketCliente(jsonObject.toString());
         JSONObject jsonObject1 = new JSONObject(msj);
         String regreso = jsonObject1.getString("mensaje");
+        String tipo = jsonObject1.getString("typeFile");
         int tam = Integer.parseInt(regreso);
 
         Conexion conn2 = new Conexion();
-        conn2.recibirArchivo(localPath, archivo, tam);
+        conn2.recibirArchivo(localPath, archivo, tam, tipo);
     }
 
     public void getDirectorio() {

@@ -73,7 +73,7 @@ public class Menu {
 
                     if (choiceList == 1) {
                         System.out.println("local");
-                        local.crearCarpeta();
+                        local.crearCarpeta(localPath);
 
                     } else if (choiceList == 2) {
                         System.out.println("remotamente");
@@ -88,7 +88,7 @@ public class Menu {
                     // Logica para eliminar carpetas/archivos
                     if (choiceList == 1) {
                         System.out.println("local");
-                        local.eliminarCarpeta();
+                        local.eliminarCarpeta(localPath);
 
                     } else if (choiceList == 2) {
                         System.out.println("remotamente");

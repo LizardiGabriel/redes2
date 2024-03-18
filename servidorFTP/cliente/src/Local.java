@@ -14,11 +14,52 @@ public class Local {
 
     }
 
-    public void crearCarpeta() {
-        // crear una carpeta en el directorio donde se esta ejecutando la aplicacion java
+    public void crearCarpeta(String localPath) {
+        // crear una carpeta en localpath
+        System.out.print("Escribe el nombre de la carpeta que quieres crear: ");
+        Scanner scanner = new Scanner(System.in);
+        String carpeta = scanner.nextLine();
+
+        String path1 = localPath+"/"+ carpeta;
+        File directorio = new File(path1);
+
+
+        if (directorio.exists() && directorio.isDirectory()) {
+            System.out.println("La carpeta ya existe.");
+
+
+
+        } else {
+            if(directorio.mkdir()){
+                System.out.println("La carpeta ha sido creada.");
+            }else{
+                System.out.println("Error al crear la carpeta.");
+            }
+        }
+
+
+
     }
 
-    public void eliminarCarpeta() {
+    public void eliminarCarpeta(String path) {
+        // eliminar una carpeta en localpath
+        System.out.print("Escribe el nombre de la carpeta que quieres eliminar: ");
+        Scanner scanner = new Scanner(System.in);
+        String carpeta = scanner.nextLine();
+
+        String path1 = path+"/"+ carpeta;
+        File directorio = new File(path1);
+
+
+        if (directorio.exists() && directorio.isDirectory()) {
+            if(directorio.delete()){
+                System.out.println("La carpeta ha sido eliminada.");
+            }else{
+                System.out.println("Error al eliminar la carpeta.");
+            }
+        } else {
+            System.out.println("La carpeta no existe.");
+        }
     }
 
     public String cambiarDirectorio(String localPath) {

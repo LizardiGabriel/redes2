@@ -45,7 +45,7 @@ char *opcJson(char *opcion, char *msj) {
     // Imprimir el valor del campo "nombre"
     // printf("El nombre es: %s\n", nombre_value);
 
-    char *ret = malloc(strlen(nombre_value) + 1);
+    char *ret = (char *)malloc((strlen(nombre_value) + 1)*sizeof(char *));
     strcpy(ret, nombre_value);
 
     // Liberar el JSON
@@ -66,8 +66,8 @@ char *listarContenido(char *ruta) {
     // Verificar si se pudo abrir el directorio
     if (dir) {
         int max_elementos = 100;
-        archivos = malloc(max_elementos * sizeof(char *));
-        carpetas = malloc(max_elementos * sizeof(char *));
+        archivos = (char **)malloc(max_elementos * sizeof(char *));
+        carpetas = (char **)malloc(max_elementos * sizeof(char *));
 
         if (archivos == NULL) {
             perror("Error al asignar memoria");
@@ -82,13 +82,13 @@ char *listarContenido(char *ruta) {
 
             if (entry->d_type == DT_DIR) {
                 // carpeta
-                carpetas[num_elementos_car] = malloc(strlen(entry->d_name) + 1);
+                carpetas[num_elementos_car] = malloc((strlen(entry->d_name) + 1)*sizeof(char *));
                 strcpy(carpetas[num_elementos_car], entry->d_name);
                 num_elementos_car++;
 
             } else {
                 // archivo
-                archivos[num_elementos_arch] = malloc(strlen(entry->d_name) + 1);
+                archivos[num_elementos_arch] = malloc((strlen(entry->d_name) + 1)*sizeof(char *));
                 strcpy(archivos[num_elementos_arch], entry->d_name);
                 num_elementos_arch++;
             }

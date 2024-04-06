@@ -51,12 +51,12 @@ public class Ventana {
 
 
 
-        JFrame frame = new JFrame("Ventana");
+        JFrame frame = new JFrame("Cliente FTP");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         int height = 2 * (getHeigh() / 3) ;
         int width = 2 * (getWidth()/3);
 
-        frame.setSize(width, height); // Tamaño del marco ajustado
+        frame.setBounds(getWidth()/6, getHeigh()/6, width, height);
 
 
         panel.setLayout(null);
@@ -159,7 +159,7 @@ public class Ventana {
         mkdirServidor.addActionListener(e -> {
 
             textoAux(true);
-            textoOk.setText("carpeta en servidor:");
+            textoOk.setText("(serv) crear carpeta:");
             ok.removeActionListener(ok.getActionListeners()[0]);
             ok.addActionListener(e1 -> {
                 String ret = remoto.crearCarpeta(nombreFile.getText());
@@ -177,7 +177,7 @@ public class Ventana {
         });
         mkdirLocal.addActionListener(e -> {
             textoAux(true);
-            textoOk.setText("carpeta en local:");
+            textoOk.setText("(local) crear carpeta:");
             ok.removeActionListener(ok.getActionListeners()[0]);
             ok.addActionListener(e1 -> {
                 String ret = local.crearCarpeta(localPath, nombreFile.getText());
@@ -187,7 +187,7 @@ public class Ventana {
         });
         rmdirServidor.addActionListener(e -> {
             textoAux(true);
-            textoOk.setText("eliminar carpeta del servidor:");
+            textoOk.setText("(serv) eliminar:");
             ok.removeActionListener(ok.getActionListeners()[0]);
             ok.addActionListener(e1 -> {
                         String ret = remoto.eliminarAlgo(nombreFile.getText());
@@ -203,7 +203,7 @@ public class Ventana {
         });
         rmdirLocal.addActionListener(e -> {
             textoAux(true);
-            textoOk.setText("eliminar carpeta local:");
+            textoOk.setText("(local) eliminar:");
             ok.removeActionListener(ok.getActionListeners()[0]);
             ok.addActionListener(e1 -> {
                 String ret = local.eliminarCarpeta(localPath, nombreFile.getText());
@@ -214,7 +214,7 @@ public class Ventana {
         });
         cdServidor.addActionListener(e -> {
             textoAux(true);
-            textoOk.setText("cambiar directorio serv:");
+            textoOk.setText("(serv) folder:");
             ok.removeActionListener(ok.getActionListeners()[0]);
             ok.addActionListener(e1 -> {
                 String ret = remoto.cambiarDirectorio(nombreFile.getText());
@@ -231,7 +231,7 @@ public class Ventana {
 
         cdLocal.addActionListener(o -> {
             textoAux(true);
-            textoOk.setText("cambiar dir local:");
+            textoOk.setText("(local) folder:");
             ok.removeActionListener(ok.getActionListeners()[0]);
             ok.addActionListener(e1 -> {
                 String ret[] = local.cambiarDirectorio(localPath, nombreFile.getText());
@@ -249,7 +249,7 @@ public class Ventana {
         // logica para enviar archivo al servidor
         put.addActionListener(e -> {
             textoAux(true);
-            textoOk.setText("file/fldr a enviar:");
+            textoOk.setText("enviar:");
             ok.removeActionListener(ok.getActionListeners()[0]);
             ok.addActionListener(e1 -> {
                 String ret = remoto.enviarArchivo(localPath, nombreFile.getText());
@@ -265,7 +265,7 @@ public class Ventana {
 
         get.addActionListener(e -> {
             textoAux(true);
-            textoOk.setText("file/fldr a recivir:");
+            textoOk.setText("recibir:");
             ok.removeActionListener(ok.getActionListeners()[0]);
             ok.addActionListener(e1 -> {
                 String ret = remoto.recibirArchivo(localPath, nombreFile.getText());
@@ -278,7 +278,6 @@ public class Ventana {
 
 
     public void ajustarComponentes(int height, int width) {
-
 
         int x = width / 20;
         int y = height / 25;
@@ -305,8 +304,8 @@ public class Ventana {
         rmdirServidor.setBounds(3*x, 16 * y, 3 * x, y);
         rmdirLocal.setBounds(14*x, 16 * y, 3 * x, y);
 
-        put.setBounds(8 * x, 13 * y, 4 * x, y);
-        get.setBounds(8 * x, 14 * y, 4 * x, y);
+        put.setBounds(9 * x, 12 * y, 2 * x, y);
+        get.setBounds(9 * x, 14 * y, 2 * x, y);
 
         nombreFile.setBounds(8 * x, 16 * y, 3 * x, y);
         ok.setBounds(11 * x, 16 * y,  1* x, y);
@@ -316,20 +315,43 @@ public class Ventana {
         consola.setBounds(x, 18 * y, 18 * x, 5*y);
 
 
+        // cambiar tam de letra
+        int tamLetra = width/90;
+        String letra = "Comic Sans MS";
 
+        labelPathServidor.setFont(new Font(letra, Font.BOLD, tamLetra));
+        labelPathLocal.setFont(new Font(letra, Font.BOLD, tamLetra));
+        labelContenidoServidor.setFont(new Font(letra, Font.BOLD, tamLetra));
+        labelContenidoLocal.setFont(new Font(letra, Font.BOLD, tamLetra));
+        labelConsola.setFont(new Font(letra, Font.BOLD, tamLetra));
+        textoOk.setFont(new Font(letra, Font.BOLD, tamLetra));
 
+        pathServidor.setFont(new Font(letra, Font.PLAIN, tamLetra));
+        pathLocal.setFont(new Font(letra, Font.PLAIN, tamLetra));
+        textAreaLocal.setFont(new Font(letra, Font.PLAIN, tamLetra));
+        textAreaServidor.setFont(new Font(letra, Font.PLAIN, tamLetra));
+        consola.setFont(new Font(letra, Font.PLAIN, tamLetra));
+        nombreFile.setFont(new Font(letra, Font.PLAIN, tamLetra));
 
-
-
+        ok.setFont(new Font(letra, Font.PLAIN, tamLetra));
+        mkdirLocal.setFont(new Font(letra, Font.PLAIN, tamLetra));
+        mkdirServidor.setFont(new Font(letra, Font.PLAIN, tamLetra));
+        rmdirLocal.setFont(new Font(letra, Font.PLAIN, tamLetra));
+        rmdirServidor.setFont(new Font(letra, Font.PLAIN, tamLetra));
+        cdLocal.setFont(new Font(letra, Font.PLAIN, tamLetra));
+        cdServidor.setFont(new Font(letra, Font.PLAIN, tamLetra));
+        put.setFont(new Font(letra, Font.PLAIN, tamLetra));
+        get.setFont(new Font(letra, Font.PLAIN, tamLetra));
 
     }
 
     public void cambiarColores(){
 
 
-        Color ded = new Color(33, 40, 54);
+        Color ded = new Color(38, 40, 42);
         Color colorTexto = new Color(215, 195, 195);
         Color fondo = new Color(28, 29, 31);
+        Color textoConsola = new Color(126, 164, 81);
 
         labelPathLocal.setForeground(colorTexto);
         labelPathServidor.setForeground(colorTexto);
@@ -349,7 +371,7 @@ public class Ventana {
         pathServidor.setForeground(colorTexto);
         textAreaLocal.setForeground(colorTexto);
         textAreaServidor.setForeground(colorTexto);
-        consola.setForeground(colorTexto);
+        consola.setForeground(textoConsola);
         nombreFile.setForeground(colorTexto);
 
         nombreFile.setBorder(BorderFactory.createLineBorder(colorTexto));
@@ -357,37 +379,52 @@ public class Ventana {
 
         panel.setBackground(fondo);
 
+        Color colorcito = new Color(69, 71, 77);
 
-
+        mkdirServidor.setOpaque(true);
+        mkdirServidor.setBackground(colorcito);
         mkdirServidor.setForeground(colorTexto);
         mkdirServidor.setBorder(BorderFactory.createLineBorder(colorTexto));
+
+        mkdirLocal.setOpaque(true);
+        mkdirLocal.setBackground(colorcito);
         mkdirLocal.setForeground(colorTexto);
         mkdirLocal.setBorder(BorderFactory.createLineBorder(colorTexto));
 
+        rmdirServidor.setOpaque(true);
+        rmdirServidor.setBackground(colorcito);
         rmdirServidor.setForeground(colorTexto);
         rmdirServidor.setBorder(BorderFactory.createLineBorder(colorTexto));
+
+        rmdirLocal.setOpaque(true);
+        rmdirLocal.setBackground(colorcito);
         rmdirLocal.setForeground(colorTexto);
         rmdirLocal.setBorder(BorderFactory.createLineBorder(colorTexto));
 
+        cdServidor.setOpaque(true);
+        cdServidor.setBackground(colorcito);
         cdServidor.setForeground(colorTexto);
         cdServidor.setBorder(BorderFactory.createLineBorder(colorTexto));
+
+        cdLocal.setOpaque(true);
+        cdLocal.setBackground(colorcito);
         cdLocal.setForeground(colorTexto);
         cdLocal.setBorder(BorderFactory.createLineBorder(colorTexto));
 
+        put.setOpaque(true);
+        put.setBackground(colorcito);
         put.setForeground(colorTexto);
         put.setBorder(BorderFactory.createLineBorder(colorTexto));
+
+        get.setOpaque(true);
+        get.setBackground(colorcito);
         get.setForeground(colorTexto);
         get.setBorder(BorderFactory.createLineBorder(colorTexto));
 
+        ok.setOpaque(true);
+        ok.setBackground(colorcito);
         ok.setForeground(colorTexto);
         ok.setBorder(BorderFactory.createLineBorder(colorTexto));
-
-
-
-
-
-
-
 
     }
 

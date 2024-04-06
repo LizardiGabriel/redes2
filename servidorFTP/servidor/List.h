@@ -15,6 +15,8 @@ char *directorioActual(char *ruta);
 
 char *cambiarDirectorio(char *ruta);
 
+char *cambiarDirectorioAnterior(char *ruta);
+
 char *recibido(char *mensaje);
 
 char *opcJson(char *opc, char *mensaje);

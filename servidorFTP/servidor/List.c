@@ -45,7 +45,7 @@ char *opcJson(char *opcion, char *msj) {
     // Imprimir el valor del campo "nombre"
     // printf("El nombre es: %s\n", nombre_value);
 
-    char *ret = (char *)malloc((strlen(nombre_value) + 1)*sizeof(char));
+    char *ret = (char *)malloc((strlen(nombre_value) + 1) * sizeof(char));
     strcpy(ret, nombre_value);
 
     // Liberar el JSON
@@ -82,13 +82,13 @@ char *listarContenido(char *ruta) {
 
             if (entry->d_type == DT_DIR) {
                 // carpeta
-                carpetas[num_elementos_car] = (char *)malloc((strlen(entry->d_name) + 1)*sizeof(char));
+                carpetas[num_elementos_car] = (char *)malloc((strlen(entry->d_name) + 1) * sizeof(char));
                 strcpy(carpetas[num_elementos_car], entry->d_name);
                 num_elementos_car++;
 
             } else {
                 // archivo
-                archivos[num_elementos_arch] = (char *)malloc((strlen(entry->d_name) + 1)*sizeof(char));
+                archivos[num_elementos_arch] = (char *)malloc((strlen(entry->d_name) + 1) * sizeof(char));
                 strcpy(archivos[num_elementos_arch], entry->d_name);
                 num_elementos_arch++;
             }
@@ -259,13 +259,13 @@ char *cambiarDirectorio(char *ruta) {
 
     if (dir) {
         len = strlen(mensaje_ok);
-        directorio = (char *)malloc((len + 1)*sizeof(char));
+        directorio = (char *)malloc((len + 1) * sizeof(char));
         strcpy(directorio, mensaje_ok);
         closedir(dir);
 
     } else {
         len = strlen(mensaje_error);
-        directorio = (char *)malloc((len + 1)*sizeof(char));
+        directorio = (char *)malloc((len + 1) * sizeof(char));
         strcpy(directorio, mensaje_error);
     }
 
@@ -308,6 +308,38 @@ char *cambiarDirectorio(char *ruta) {
     json_decref(jsonRoot);
     json_decref(jsonArray);
     free(jsonString);
+}
+
+char *cambiarDirectorioAnterior(char *ruta_completa) {
+
+    char *error = "error";
+
+    if (ruta_completa == NULL || *ruta_completa == '\0') {
+        return error;
+    }
+
+   
+    char *ultimo_slash = ruta_completa;
+    char *caracter_actual = ruta_completa;
+    while (*caracter_actual != '\0') {
+        if (*caracter_actual == '/') {
+            ultimo_slash = caracter_actual;
+        }
+        caracter_actual++;
+    }
+
+    while (ultimo_slash > ruta_completa && *ultimo_slash == '/') {
+        ultimo_slash--;
+    }
+
+    char *directorio_padre = malloc(ultimo_slash - ruta_completa + 2);
+    if (directorio_padre == NULL) {
+        return error; 
+    }
+    strncpy(directorio_padre, ruta_completa, ultimo_slash - ruta_completa + 1);
+    directorio_padre[ultimo_slash - ruta_completa + 1] = '\0'; 
+
+    return directorio_padre;
 }
 
 char *mandarFileFldr(char *mensaje, int typeFile) {
@@ -416,7 +448,7 @@ char *recibido(char *mensaje) {
 
 char *mkdirCarpeta(char *ruta, char *carpeta) {
     int tam = strlen(ruta) + 1 + strlen(carpeta) + 1;
-    char *rutita = (char *)malloc(tam*sizeof(char));
+    char *rutita = (char *)malloc(tam * sizeof(char));
     strcpy(rutita, ruta);
     strcat(rutita, "/");
     strcat(rutita, carpeta);
@@ -439,7 +471,7 @@ char *rmdirAlgo(char *ruta, char *archivo) {
     char *mensaje;
 
     int tam = strlen(ruta) + 1 + strlen(archivo) + 1;
-    char *rutita = (char *)malloc(tam*sizeof(char));
+    char *rutita = (char *)malloc(tam * sizeof(char));
     strcpy(rutita, ruta);
     strcat(rutita, "/");
     strcat(rutita, archivo);
@@ -458,7 +490,6 @@ char *rmdirAlgo(char *ruta, char *archivo) {
             system(comando2);
             free(comando2);
             mensaje = "--> Carpeta eliminada";
-            
 
         } else {
             // es un file
@@ -471,7 +502,7 @@ char *rmdirAlgo(char *ruta, char *archivo) {
         }
     } else {
         tam = strlen("No existe: ") + strlen(rutita) + 1;
-        mensaje = (char *)malloc(tam*sizeof(char));
+        mensaje = (char *)malloc(tam * sizeof(char));
         strcpy(mensaje, "No existe: ");
         strcat(mensaje, rutita);
         printf("mensaje: %s\n", mensaje);
@@ -483,7 +514,7 @@ char *rmdirAlgo(char *ruta, char *archivo) {
 
 char *rutaAbsoluta(char *ruta, char *nombre) {
     int tam = strlen(ruta) + 1 + strlen(nombre) + 1;
-    char *rutita = (char *)malloc(tam*sizeof(char));
+    char *rutita = (char *)malloc(tam * sizeof(char));
     strcpy(rutita, ruta);
     strcat(rutita, "/");
     strcat(rutita, nombre);
@@ -546,7 +577,7 @@ char *recorrerDirectorio(char *ruta) {
     }
 
     closedir(dir);
-    //printf("close dir pipipi\n");
+    // printf("close dir pipipi\n");
     int len = strlen(retornar);
     if (len > 0 && retornar[len - 1] == ',') {
         retornar[len - 1] = '\0'; // remove the trailing comma

@@ -98,15 +98,39 @@ int iniciarSocket(int puerto) {
 
         } else if (strcmp(clave, "cd4") == 0) {
             char *ruta_nueva = opcJson("carpeta", mensaje);
-            int tam_nuevo = strlen(ruta) + strlen(ruta_nueva) + 1;
-            ruta = (char *)realloc(ruta, tam_nuevo);
-            strcat(ruta, "/");
-            strcat(ruta, ruta_nueva);
-            printf("Ruta nuevecita: %s\n", ruta);
 
-            char *contenido = cambiarDirectorio(ruta);
-            printf("contenido: %s\n", contenido);
-            n = write(newsockfd, contenido, strlen(contenido));
+            if (strcmp(ruta_nueva, "..") == 0) {
+                // cambiar a directorio anterior
+                printf("--->Ruta anterior\n");
+                char *dirPadre = cambiarDirectorioAnterior(ruta);
+                printf("dirPadre: %s\n", dirPadre);
+                int tam_nuevo = strlen(dirPadre) + 1;
+                ruta = (char *)realloc(ruta, tam_nuevo);
+                strcpy(ruta, dirPadre);
+                printf("Ruta nuevecita: %s\n", ruta);
+
+                char *contenido = cambiarDirectorio(dirPadre);
+                printf("contenido: %s\n", contenido);
+                n = write(newsockfd, contenido, strlen(contenido));
+
+            
+            } else if(strcmp(ruta_nueva, ".") == 0){
+                printf("--->Ruta actual\n");
+                char *contenido = cambiarDirectorio(ruta);
+                printf("contenido: %s\n", contenido);
+                n = write(newsockfd, contenido, strlen(contenido));
+
+            }else{
+                int tam_nuevo = strlen(ruta) + strlen(ruta_nueva) + 1;
+                ruta = (char *)realloc(ruta, tam_nuevo);
+                strcat(ruta, "/");
+                strcat(ruta, ruta_nueva);
+                printf("Ruta nuevecita: %s\n", ruta);
+
+                char *contenido = cambiarDirectorio(ruta);
+                printf("contenido: %s\n", contenido);
+                n = write(newsockfd, contenido, strlen(contenido));
+            }
 
         } else if (strcmp(clave, "put5") == 0) {
             char *typeFile = opcJson("type", mensaje);
@@ -175,7 +199,6 @@ int iniciarSocket(int puerto) {
             char env_tam[20];
             sprintf(env_tam, "%d", tam_archivo);
 
-
             char *contenido = mandarFileFldr(env_tam, isFolder);
             printf("contenido: %s\n", contenido);
             n = write(newsockfd, contenido, strlen(contenido));
@@ -197,7 +220,6 @@ int iniciarSocket(int puerto) {
                 system(comando2);
                 free(comando2);
             }
-            
 
         } else if (strcmp(clave, "list0") == 0) {
             char *contenido = directorioActual(ruta);

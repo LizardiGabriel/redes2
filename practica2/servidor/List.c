@@ -1,7 +1,3 @@
-//
-// Created by lizardi on 09/03/24.
-//
-
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -17,6 +13,8 @@
 #include "List.h"
 
 #include <zlib.h>
+
+//#region inicio de list0
 
 char *opcJson(char *opcion, char *msj) {
 

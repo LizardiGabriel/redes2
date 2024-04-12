@@ -9,15 +9,19 @@
 
 #include "List.h"
 
+#define BUFFER_SIZE 1024
+
 int iniciarSocket3(int puerto, char *nombreArchivo, int tam, char *path, char *typeFile) {
 
     int sockfd, newsockfd, portno, n;
     socklen_t clilen;
     struct sockaddr_in serv_addr, cli_addr;
-    char *buffer = (char *)malloc((tam + 1) * sizeof(char));
+    char buffer[BUFFER_SIZE];
+    socklen_t len = sizeof(cli_addr);
+
 
     // Crear un socket
-    sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    sockfd = socket(AF_INET, SOCK_DGRAM, 0);
     if (sockfd < 0) {
         perror("ERROR opening socket");
         exit(1);
@@ -38,18 +42,6 @@ int iniciarSocket3(int puerto, char *nombreArchivo, int tam, char *path, char *t
         exit(1);
     }
 
-    // Escuchar conexiones entrantes
-    listen(sockfd, 5);
-    clilen = sizeof(cli_addr);
-
-    // Aceptar una conexión entrante y crear un nuevo socket para la comunicación
-    newsockfd = accept(sockfd, (struct sockaddr *)&cli_addr, &clilen);
-
-    if (newsockfd < 0) {
-        perror("ERROR on accept");
-        exit(1);
-    }
-
     // Abrir un nuevo archivo para escribir los datos recibidos
     int tamPath = strlen(path) + 1 + strlen(nombreArchivo) + 1 + 4;
     char *pathArchivo = (char *)malloc(tamPath * sizeof(char));
@@ -62,9 +54,6 @@ int iniciarSocket3(int puerto, char *nombreArchivo, int tam, char *path, char *t
     strcpy(pathArchivoUnzip, path);
     strcat(pathArchivoUnzip, "/");
     strcat(pathArchivoUnzip, nombreArchivo);
-   
-
-    // printf("pathArchivo: %s\n", pathArchivo);
 
     FILE *file = fopen(pathArchivo, "wb");
     if (file == NULL) {
@@ -72,22 +61,31 @@ int iniciarSocket3(int puerto, char *nombreArchivo, int tam, char *path, char *t
         exit(1);
     }
 
-    // Recibir los datos del archivo en trozos y escribirlos en el archivo en el servidor
     printf("Recibiendo archivo...\n");
-    int totalBytesRead = 0;
-    while (totalBytesRead < tam) {
-        n = read(newsockfd, buffer, 1024);
-        if (n <= 0) {
+
+    int totalBytesReceived = 0;
+    while (1) {
+        // Recibir paquete de datos del cliente
+        int n = recvfrom(sockfd, buffer, BUFFER_SIZE, MSG_WAITALL, (struct sockaddr *)&cli_addr, &len);
+        if (n == -1) {
+            perror("Error al recibir datos");
+            exit(EXIT_FAILURE);
+        }
+        totalBytesReceived += n;
+
+        // Escribir datos en el archivo
+        fwrite(buffer, 1, n, file);
+
+        // Enviar respuesta al cliente (ACK)
+        sendto(sockfd, "ACK", 3, 0, (struct sockaddr *)&cli_addr, len);
+
+        // Si se recibe un paquete vacío, se considera el fin de la transmisión
+        if (n == 0) {
             break;
         }
-        fwrite(buffer, 1, n, file);
-        totalBytesRead += n;
     }
 
-    if (n < 0) {
-        perror("ERROR reading from socket");
-        exit(1);
-    }
+    printf("Archivo recibido correctamente. Tamaño total: %d bytes\n", totalBytesReceived);
 
     fclose(file);
 
@@ -111,7 +109,7 @@ int iniciarSocket3(int puerto, char *nombreArchivo, int tam, char *path, char *t
         system(comando2);
         free(comando2);
 
-    }else if(strcmp(typeFile, "file") == 0){
+    } else if (strcmp(typeFile, "file") == 0) {
         char *comando = (char *)malloc((tamPath * 2) * sizeof(char));
         strcpy(comando, "unzip -o ");
         strcat(comando, pathArchivo);
@@ -134,7 +132,7 @@ int iniciarSocket3(int puerto, char *nombreArchivo, int tam, char *path, char *t
     n = write(newsockfd, contenido, strlen(contenido));
 
     // Cerrar el socket
-    
+
     close(newsockfd);
     close(sockfd);
 

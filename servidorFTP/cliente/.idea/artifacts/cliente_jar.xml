@@ -1,9 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="cliente:jar">
-    <output-path>$PROJECT_DIR$/../clienteEx</output-path>
-    <root id="archive" name="cliente.jar">
-      <element id="module-output" name="cliente" />
-      <element id="extracted-dir" path="$USER_HOME$/librerias - prog/json-20240205.jar" path-in-jar="/" />
-    </root>
-  </artifact>
-</component>

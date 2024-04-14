@@ -49,19 +49,35 @@ public class Local {
 
         String ret[] = new String[2];
 
-        String path1 = localPath+"/"+ carpeta;
-        File directorio = new File(path1);
-
-        if (directorio.exists() && directorio.isDirectory()) {
-            ret[0] = "La carpeta existe.";
+        if(carpeta.equals("..")){
+            String path1 = localPath.substring(0, localPath.lastIndexOf("/"));
+            ret[0] = "Cambiando de directorio.";
             ret[1] = path1;
             return ret;
 
-        } else {
-            ret[0] = "La carpeta no existe.";
+        }else if(carpeta.equals(".")){
+            ret[0] = "Directorio actual.";
             ret[1] = localPath;
             return ret;
+
+        }else{
+            String path1 = localPath+"/"+ carpeta;
+            File directorio = new File(path1);
+
+            if (directorio.exists() && directorio.isDirectory()) {
+                ret[0] = "La carpeta existe.";
+                ret[1] = path1;
+                return ret;
+
+            } else {
+                ret[0] = "La carpeta no existe.";
+                ret[1] = localPath;
+                return ret;
+            }
+
         }
+
+
 
 
     }
@@ -82,20 +98,18 @@ public class Local {
         }
 
         for (File file : files) {
-            if (file.isFile()) {
-                resultado.append(espacio).append(file.getName()).append("\n");
-            }
-        }
-
-        for (File file : files) {
             if (file.isDirectory()) {
-                resultado.append(espacio).append(file.getName()).append("/\n");
-                resultado.append(imprimirDirectorio(file.getAbsolutePath(), espacio + "  "));
+                String nombreDirectorio = file.getName() + "/";
+                resultado.append(espacio).append("├───").append(nombreDirectorio).append("\n");
+                resultado.append(imprimirDirectorio(file.getAbsolutePath(), espacio + "│   "));
+            } else {
+                resultado.append(espacio).append("└───").append(file.getName()).append("\n");
             }
         }
 
         return resultado.toString();
     }
+
 
 
 

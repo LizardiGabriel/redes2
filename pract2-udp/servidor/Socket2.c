@@ -154,12 +154,25 @@ int iniciarSocket(int puerto) {
             int pasarTam = atoi(tama);
             // printf("tam para pasar: %d\n", pasarTam);
 
+            char *tamBuffer = opcJson("tamBuffer", mensaje);
+            int tamBufferInt = atoi(tamBuffer);
+
+            char *tamVentana = opcJson("tamVentana", mensaje);
+            int tamVentanaInt = atoi(tamVentana);
+
+            printf("\t\t===>tamBufferInt: %d\n", tamBufferInt);
+            printf("\t\t===>numPaquetesInt: %d\n", tamVentanaInt);
+
             cerradito = close(newsockfd);
             if (cerradito == 0)
                 cerrarYN = 1;
 
             // pasar el parametro typeFile para saber si es un archivo o carpeta
-            int recibirAlgo = iniciarSocket3(1235, nombreOriginal, pasarTam, ruta, typeFile);
+            // cambiar para usar tco / udp
+
+            //int recibirAlgo = iniciarSocket3(1235, nombreOriginal, pasarTam, ruta, typeFile, tamBufferInt, tamVentanaInt);
+            int recibirAlgo = iniciarSocket3UDP(1235, nombreOriginal, pasarTam, ruta, typeFile, tamBufferInt, tamVentanaInt);
+
             if (recibirAlgo == 0) {
                 printf("Archivo recibido c:\n");
             }

@@ -149,6 +149,55 @@ public class Ventana {
     public void mensaje(String mensaje) {
         JOptionPane.showMessageDialog(null, mensaje);
     }
+    public int seleccionBuff(long tam, String msg){
+
+        int ret = 1;
+        // preguntar el tamaño del buffer
+
+        String res = JOptionPane.showInputDialog("Tam del archivo: "+ tam +". Tamaño del buffer: " );
+        try {
+            ret = Integer.parseInt(res);
+            if(ret > tam){
+                mensaje("Error: el tamaño del buffer no puede ser mayor al tamaño del archivo.");
+                return seleccionBuff(tam, msg);
+            }
+            if (ret < 1){
+                mensaje("Error: el tamaño del buffer debe ser mayor a 0.");
+                return seleccionBuff(tam, msg);
+            }
+
+        } catch (NumberFormatException e) {
+            mensaje("Error: el tamaño del buffer debe ser un número entero.");
+            return seleccionBuff(tam, msg);
+        }
+        return ret;
+    }
+    public int seleccionVentana(long tam, int tamBuffer, String msg){
+
+        int ret = 1;
+        // preguntar el tamaño del buffer
+        String res = JOptionPane.showInputDialog("Tam de la ventana:");
+
+        try {
+            ret = Integer.parseInt(res);
+            int MaxVentana = (int) Math.ceil((double) tam / tamBuffer);
+            if(ret > MaxVentana){
+                mensaje("Error: el tamaño de la ventana no puede ser mayor a " + MaxVentana);
+                return seleccionVentana(tam, tamBuffer, msg);
+            }
+            if (ret < 1){
+                mensaje("Error: el tamaño de la ventana debe ser mayor a 0.");
+                return seleccionVentana(tam, tamBuffer, msg);
+            }
+
+
+        } catch (NumberFormatException e) {
+            mensaje("Error: el tamaño del buffer debe ser un número entero.");
+            return seleccionVentana(tam, tamBuffer, msg);
+        }
+        return ret;
+    }
+
 
     public void eventitos(){
         ok.addActionListener(e -> {
@@ -207,6 +256,7 @@ public class Ventana {
             ok.removeActionListener(ok.getActionListeners()[0]);
             ok.addActionListener(e1 -> {
                 String ret = local.eliminarCarpeta(localPath, nombreFile.getText());
+                consola.setText(ret);
                 textAreaLocal.setText(local.imprimirDirectorio(localPath, "  "));
                 textoAux(false);
             });

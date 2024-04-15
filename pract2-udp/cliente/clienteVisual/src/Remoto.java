@@ -12,9 +12,6 @@ import java.util.zip.ZipOutputStream;
 
 
 
-
-
-
 public class Remoto {
     public String  listarContenido() throws IOException {
         Conexion conn = new Conexion();
@@ -89,6 +86,17 @@ public class Remoto {
         jsonObject.put("tam", tamString);
         jsonObject.put("type", queEs);
 
+        Ventana ventana = new Ventana();
+        int tamBuffer = ventana.seleccionBuff(tam, "buffer");
+        int tamVentana = ventana.seleccionVentana(tam, tamBuffer, "tam de ventana");
+
+
+        String tamBufferString = String.valueOf(tamBuffer);
+        String tamVentanaString = String.valueOf(tamVentana);
+
+        jsonObject.put("tamBuffer", tamBufferString);
+        jsonObject.put("tamVentana", tamVentanaString);
+
         Conexion conn = new Conexion();
         String a = conn.SocketCliente(jsonObject.toString());
         JsonToString pasar = new JsonToString();
@@ -96,16 +104,18 @@ public class Remoto {
 
 
         Conexion conn2 = new Conexion();
-        conn2.enviarArchivo(rutitaNueva);
+        // cambiar aqui para udp o tcp
+        //conn2.enviarArchivo(rutitaNueva, tamBuffer, tamVentana);
+        conn2.enviarArchivoUDP(rutitaNueva, tamBuffer, tamVentana);
 
 
         // eliminar el .zip
         try {
             file.delete();
         } catch (Exception e) {
-            System.err.println("Error al eliminar el archivo: " + e.getMessage());
-        }
+            ventana.mensaje("Error al eliminar el archivo: " + e.getMessage());
 
+        }
         return "Archivo enviado exitosamente.";
 
 
@@ -140,14 +150,15 @@ public class Remoto {
                 fis.close();
                 zipOut.close();
                 fos.close();
-                System.out.println("Archivo comprimido exitosamente.");
+                //System.out.println("Archivo comprimido exitosamente.");
 
             }
         } catch(
             IOException e)
 
         {
-           System.err.println("Error al comprimir el archivo: " + e.getMessage());
+            Ventana ventana = new Ventana();
+            ventana.mensaje("Error al comprimir el archivo: " + e.getMessage());
         }
         return retorno;
     }
@@ -202,7 +213,8 @@ public class Remoto {
                             Files.copy(path, zs);
                             zs.closeEntry();
                         } catch (IOException e) {
-                            System.err.println(e);
+                            Ventana ventana = new Ventana();
+                            ventana.mensaje("Error al pack: " + e.getMessage());
                         }
                     });
         }

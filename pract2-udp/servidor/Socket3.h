@@ -4,7 +4,9 @@
 #include "Socket3.c"
 
 
-int iniciarSocket3(int, char*, int tam, char *path, char *typeFile);
+int iniciarSocket3(int, char*, int tam, char *path, char *typeFile, int tamBuffer, int tamVentanaInt);
+
+int iniciarSocket3UDP(int puerto, char *nombreArchivo, int tam, char *path, char *typeFile, int tamBuffer, int tamVentanaInt);
 
 
 #endif 

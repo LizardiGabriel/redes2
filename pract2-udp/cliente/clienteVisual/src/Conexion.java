@@ -1,9 +1,9 @@
 import org.json.JSONObject;
 
 import java.io.*;
-import java.net.Socket;
-import java.net.UnknownHostException;
+import java.net.*;
 
+import java.nio.ByteBuffer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -50,8 +50,43 @@ public class Conexion {
 
     }
 
+    public void enviarArchivoUDP(String rutitaNueva, int tamBuffer, int tamVentana) {
+        ventana.mensaje("Enviando archivo...");
 
-    public void enviarArchivo(String rutitaNueva) {
+        try {
+            File file = new File(rutitaNueva);
+            if (!file.exists()) {
+                System.out.println("File not found: " + rutitaNueva);
+                return;
+            }
+
+            byte[] buffer = new byte[1024];
+            DatagramSocket socket = new DatagramSocket();
+            InetAddress serverAddress = InetAddress.getByName(hostName);
+
+            FileInputStream fileInputStream = new FileInputStream(file);
+            BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
+
+            int bytesRead;
+            while ((bytesRead = bufferedInputStream.read(buffer)) != -1) {
+                DatagramPacket packet = new DatagramPacket(buffer, bytesRead, serverAddress, portNumber2);
+                socket.send(packet);
+                buffer = new byte[1024];
+            }
+
+            bufferedInputStream.close();
+            socket.close();
+
+            System.out.println("File sent successfully.");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    public void enviarArchivo(String rutitaNueva, int tamBuffer, int tamVentana) {
 
         ventana.mensaje("Enviando archivo...");
         FileInputStream fileInputStream = null;
@@ -110,7 +145,7 @@ public class Conexion {
                     socket.close();
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                ventana.mensaje("Error al cerrar los flujos y el socket: " + e.getMessage());
             }
 
         }

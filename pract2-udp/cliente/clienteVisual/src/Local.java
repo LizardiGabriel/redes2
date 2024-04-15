@@ -36,12 +36,19 @@ public class Local {
 
         if (directorio.exists() && directorio.isDirectory()) {
             if(directorio.delete()){
-                return "La carpeta ha sido eliminada.";
+                return "La carpeta "+ path1+" ha sido eliminada.";
             }else{
                 return "Error al eliminar la carpeta.";
             }
+        }if(directorio.exists() && directorio.isFile()) {
+            if(directorio.delete()){
+                return "archivo eliminado: " + path1;
+            }else{
+                return "Error al eliminar el archivo.";
+            }
         } else {
-            return "La carpeta no existe.";
+            return "error";
+
         }
     }
 

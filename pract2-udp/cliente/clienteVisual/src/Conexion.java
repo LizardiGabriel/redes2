@@ -60,18 +60,70 @@ public class Conexion {
                 return;
             }
 
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[tamBuffer];
             DatagramSocket socket = new DatagramSocket();
             InetAddress serverAddress = InetAddress.getByName(hostName);
 
             FileInputStream fileInputStream = new FileInputStream(file);
             BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
 
-            int bytesRead;
-            while ((bytesRead = bufferedInputStream.read(buffer)) != -1) {
-                DatagramPacket packet = new DatagramPacket(buffer, bytesRead, serverAddress, portNumber2);
-                socket.send(packet);
-                buffer = new byte[1024];
+
+            int ventanaInicio = 0;
+            int ventanaFin = tamVentana-1;
+
+            int finArchivo = 0;
+            int contador = 0;
+
+            int totalBytesSend = 0;
+
+            while(finArchivo == 0){
+                int bytesRead;
+                int i = 0;
+                while (i< tamVentana) {
+                    bytesRead = bufferedInputStream.read(buffer);
+                    if(contador >= ventanaInicio && contador <= ventanaFin && bytesRead != -1) {
+                        DatagramPacket packet = new DatagramPacket(buffer, bytesRead, serverAddress, portNumber2);
+                        socket.send(packet);
+                        System.out.println("envie " + contador);
+                        contador++;
+                        totalBytesSend += bytesRead;
+                        if(totalBytesSend >= file.length()){
+                            finArchivo = 1;
+                            System.out.println("fin archivo, acabeeee");
+                            break;
+
+                        }
+                    }
+                    i++;
+                }
+
+                // recibirRespuesta
+                byte[] buffer2 = new byte[1024];
+                DatagramPacket packet2 = new DatagramPacket(buffer2, buffer2.length);
+                socket.receive(packet2);
+
+                String mensaje = new String(packet2.getData(), 0, packet2.getLength());
+                int sigVentana = Integer.parseInt(mensaje);
+
+                System.out.println("socket udp resp: "+sigVentana);
+                System.out.println("ventanaFin+1: "+(ventanaFin+1));
+
+                if(sigVentana == ventanaFin+1){
+                    System.out.println("correcto");
+                    ventanaInicio = ventanaFin+1;
+                    ventanaFin = ventanaInicio + tamVentana-1;
+
+                }else{
+                    System.out.println("incorrecto");
+                    ventanaInicio = sigVentana;
+
+                }
+                if(ventanaInicio >= file.length()){
+                    finArchivo = 1;
+                    System.out.println("fin archivo, acabeeee");
+                }
+
+
             }
 
             bufferedInputStream.close();

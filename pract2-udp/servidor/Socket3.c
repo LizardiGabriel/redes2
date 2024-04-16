@@ -62,7 +62,6 @@ int iniciarSocket3(int puerto, char *nombreArchivo, int tam, char *path, char *t
     strcpy(pathArchivoUnzip, path);
     strcat(pathArchivoUnzip, "/");
     strcat(pathArchivoUnzip, nombreArchivo);
-   
 
     // printf("pathArchivo: %s\n", pathArchivo);
 
@@ -111,7 +110,7 @@ int iniciarSocket3(int puerto, char *nombreArchivo, int tam, char *path, char *t
         system(comando2);
         free(comando2);
 
-    }else if(strcmp(typeFile, "file") == 0){
+    } else if (strcmp(typeFile, "file") == 0) {
         char *comando = (char *)malloc((tamPath * 2) * sizeof(char));
         strcpy(comando, "unzip -o ");
         strcat(comando, pathArchivo);
@@ -134,25 +133,22 @@ int iniciarSocket3(int puerto, char *nombreArchivo, int tam, char *path, char *t
     n = write(newsockfd, contenido, strlen(contenido));
 
     // Cerrar el socket
-    
+
     close(newsockfd);
     close(sockfd);
 
     return 0;
 }
 
-
-int iniciarSocket3UDP(int puerto, char *nombreArchivo, int tam, char *path, char *typeFile, int tamBuffer, int tamVentanaInt) {
+int iniciarSocket3UDP(int puerto, char *nombreArchivo, int tam, char *path, char *typeFile, int tamBuffer, int tamVentana) {
 
     printf("Iniciando socket UDP...\n");
 
     int sockfd, portno;
     socklen_t clilen;
-    char buffer[1024];
+    char buffer[tamBuffer];
     struct sockaddr_in serv_addr, cli_addr;
     int n;
-
-   
 
     // Create a UDP socket
     sockfd = socket(AF_INET, SOCK_DGRAM, 0);
@@ -161,7 +157,7 @@ int iniciarSocket3UDP(int puerto, char *nombreArchivo, int tam, char *path, char
     }
 
     // Clear server address structure
-    bzero((char *) &serv_addr, sizeof(serv_addr));
+    bzero((char *)&serv_addr, sizeof(serv_addr));
     portno = puerto;
 
     serv_addr.sin_family = AF_INET;
@@ -169,11 +165,9 @@ int iniciarSocket3UDP(int puerto, char *nombreArchivo, int tam, char *path, char
     serv_addr.sin_port = htons(portno);
 
     // Bind the socket to the server address
-    if (bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) {
+    if (bind(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) {
         printf("ERROR on binding");
     }
-
-
 
     clilen = sizeof(cli_addr);
 
@@ -189,7 +183,6 @@ int iniciarSocket3UDP(int puerto, char *nombreArchivo, int tam, char *path, char
     strcpy(pathArchivoUnzip, path);
     strcat(pathArchivoUnzip, "/");
     strcat(pathArchivoUnzip, nombreArchivo);
-   
 
     // printf("pathArchivo: %s\n", pathArchivo);
 
@@ -199,37 +192,82 @@ int iniciarSocket3UDP(int puerto, char *nombreArchivo, int tam, char *path, char
         exit(1);
     }
 
-
     printf("Receiving file...\n");
 
     int totalBytesRead = 0;
-    int bandera = 0;
+    int finArchivo = 0;
 
-    while (bandera == 0) {
+    int ventanaInicio = 0;
+    int ventanaFin = tamVentana;
 
-        bzero(buffer, 1024);
-        n = recvfrom(sockfd, buffer, 1024, 0, (struct sockaddr *) &cli_addr, &clilen);
-        if (n < 0) {
-            printf("ERROR in recvfrom");
+    printf("ventanaInicio: %d\n", ventanaInicio);
+    printf("ventanaFin: %d\n", ventanaFin);
+
+    int contador = 0;
+
+    int aux = 0;
+
+    while (finArchivo == 0) {
+
+        for (int i = 0; i < tamVentana; i++) {
+            if (contador >= ventanaInicio && contador <= ventanaFin) {
+                printf("entre\n");
+                bzero(buffer, tamBuffer);
+                n = recvfrom(sockfd, buffer, tamBuffer, 0, (struct sockaddr *)&cli_addr, &clilen);
+
+                if (n < 0) {
+                    printf("socket udp \t ERROR in recvfrom");
+                    printf("me quede en i: %d\n", contador);
+                    aux = contador;
+
+                } else {
+                    printf("recibi %d", contador);
+                    contador++;
+                    fwrite(buffer, 1, n, file);
+                    totalBytesRead += n;
+                    printf("\t -- Bytes: %d\n", totalBytesRead);
+
+                    if (totalBytesRead >= tam) {
+                        finArchivo = 1;
+                        break;
+                    }
+
+                }
+            }
         }
-        printf("Received %d bytes\n", n);
-        printf("buffer: %s\n", buffer);
-        fwrite(buffer, 1, n, file);
-
-        totalBytesRead += n;
 
         printf("\t\t=======> totalBytesRead: %d\n", totalBytesRead);
-        if(totalBytesRead >= tam){
-            bandera = 1;
+        printf("contador: %d\n", contador);
+        printf("ventanaInicio: %d\n", ventanaInicio);
+        printf("ventanaFin: %d\n", ventanaFin);
+        
+
+        int band = 0;
+        if (contador == ventanaFin) {
+            band = 1;
+            ventanaInicio = contador;
+            ventanaFin = ventanaInicio + tamVentana;
+        } else {
+            band = 2;
+            ventanaInicio = aux;
         }
+        int ackNumber = 0;
+        if (band == 1) {
+            ackNumber = contador;
+        } else if (band == 2) {
+            ackNumber = aux;
+        }
+        printf("band: %d\n", band);
+        printf("ackNumber: %d\n", ackNumber);
 
+        char ackMessage[10];
+        sprintf(ackMessage, "%d", ackNumber);
+        printf("ackMessage: %s\n", ackMessage);
+        n = sendto(sockfd, ackMessage, strlen(ackMessage), 0, (struct sockaddr *)&cli_addr, clilen);
 
-        n = sendto(sockfd, "ACK", 3, 0, (struct sockaddr *) &cli_addr, clilen);
         if (n < 0) {
             printf("ERROR in sendto");
         }
-        
-
     }
 
     fclose(file);
@@ -254,7 +292,7 @@ int iniciarSocket3UDP(int puerto, char *nombreArchivo, int tam, char *path, char
         system(comando2);
         free(comando2);
 
-    }else if(strcmp(typeFile, "file") == 0){
+    } else if (strcmp(typeFile, "file") == 0) {
         char *comando = (char *)malloc((tamPath * 2) * sizeof(char));
         strcpy(comando, "unzip -o ");
         strcat(comando, pathArchivo);
@@ -272,9 +310,6 @@ int iniciarSocket3UDP(int puerto, char *nombreArchivo, int tam, char *path, char
         free(comando2);
     }
 
-
-
     close(sockfd);
     return 0;
 }
-

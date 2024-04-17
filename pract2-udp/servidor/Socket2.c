@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 #include <dirent.h>
-#include <jansson.h>
+
 #include <string.h>
 
 #include <netinet/in.h>
@@ -123,9 +123,10 @@ int iniciarSocket(int puerto) {
                 n = write(newsockfd, contenido, strlen(contenido));
 
             }else{
+                char *sepRuta = "/";
                 int tam_nuevo = strlen(ruta) + strlen(ruta_nueva) + 1;
                 ruta = (char *)realloc(ruta, tam_nuevo);
-                strcat(ruta, "/");
+                strcat(ruta, sepRuta);
                 strcat(ruta, ruta_nueva);
                 printf("Ruta nuevecita: %s\n", ruta);
 

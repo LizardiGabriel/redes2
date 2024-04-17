@@ -51,16 +51,18 @@ int iniciarSocket3(int puerto, char *nombreArchivo, int tam, char *path, char *t
     }
 
     // Abrir un nuevo archivo para escribir los datos recibidos
+    char *sepRuta = "/";
+
     int tamPath = strlen(path) + 1 + strlen(nombreArchivo) + 1 + 4;
     char *pathArchivo = (char *)malloc(tamPath * sizeof(char));
     strcpy(pathArchivo, path);
-    strcat(pathArchivo, "/");
+    strcat(pathArchivo, sepRuta);
     strcat(pathArchivo, nombreArchivo);
     strcat(pathArchivo, ".zip");
 
     char *pathArchivoUnzip = (char *)malloc(tamPath * sizeof(char));
     strcpy(pathArchivoUnzip, path);
-    strcat(pathArchivoUnzip, "/");
+    strcat(pathArchivoUnzip, sepRuta);
     strcat(pathArchivoUnzip, nombreArchivo);
 
     // printf("pathArchivo: %s\n", pathArchivo);
@@ -172,16 +174,17 @@ int iniciarSocket3UDP(int puerto, char *nombreArchivo, int tam, char *path, char
     clilen = sizeof(cli_addr);
 
     // Abrir un nuevo archivo para escribir los datos recibidos
+    char *sepRuta = "/";
     int tamPath = strlen(path) + 1 + strlen(nombreArchivo) + 1 + 4;
     char *pathArchivo = (char *)malloc(tamPath * sizeof(char));
     strcpy(pathArchivo, path);
-    strcat(pathArchivo, "/");
+    strcat(pathArchivo, sepRuta);
     strcat(pathArchivo, nombreArchivo);
     strcat(pathArchivo, ".zip");
 
     char *pathArchivoUnzip = (char *)malloc(tamPath * sizeof(char));
     strcpy(pathArchivoUnzip, path);
-    strcat(pathArchivoUnzip, "/");
+    strcat(pathArchivoUnzip, sepRuta);
     strcat(pathArchivoUnzip, nombreArchivo);
 
     // printf("pathArchivo: %s\n", pathArchivo);

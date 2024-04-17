@@ -81,7 +81,7 @@ public class Ventana {
         pathServidor.setText(remoto.getDirectorio());
 
 
-        textAreaLocal.setText(local.imprimirDirectorio(localPath, "  "));
+        textAreaLocal.setText(getDirectorio());
         textAreaServidor.setText(remoto.listarContenido());
 
         eventitos();
@@ -230,7 +230,7 @@ public class Ventana {
             ok.removeActionListener(ok.getActionListeners()[0]);
             ok.addActionListener(e1 -> {
                 String ret = local.crearCarpeta(localPath, nombreFile.getText());
-                textAreaLocal.setText(local.imprimirDirectorio(localPath, "  "));
+                textAreaLocal.setText(getDirectorio());
                 textoAux(false);
             });
         });
@@ -257,7 +257,7 @@ public class Ventana {
             ok.addActionListener(e1 -> {
                 String ret = local.eliminarCarpeta(localPath, nombreFile.getText());
                 consola.setText(ret);
-                textAreaLocal.setText(local.imprimirDirectorio(localPath, "  "));
+                textAreaLocal.setText(getDirectorio());
                 textoAux(false);
             });
 
@@ -288,7 +288,7 @@ public class Ventana {
                 consola.setText(ret[0]);
                 localPath = ret[1];
                 pathLocal.setText(localPath);
-                textAreaLocal.setText(local.imprimirDirectorio(localPath, "  "));
+                textAreaLocal.setText(getDirectorio());
 
                 textoAux(false);
             });
@@ -320,13 +320,16 @@ public class Ventana {
             ok.addActionListener(e1 -> {
                 String ret = remoto.recibirArchivo(localPath, nombreFile.getText());
                 consola.setText(ret);
-                textAreaLocal.setText(local.imprimirDirectorio(localPath, "  "));
+                textAreaLocal.setText(getDirectorio());
                 textoAux(false);
             });
         });
     }
 
 
+    public String getDirectorio() {
+        return local.imprimirDirectorio(localPath, "  ");
+    }
     public void ajustarComponentes(int height, int width) {
 
         int x = width / 20;

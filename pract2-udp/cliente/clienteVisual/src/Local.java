@@ -95,6 +95,7 @@ public class Local {
 
 
     public static String imprimirDirectorio(String ruta, String espacio) {
+        String separador = "        ";
         File dir = new File(ruta);
         File[] files = dir.listFiles();
         StringBuilder resultado = new StringBuilder();
@@ -107,10 +108,10 @@ public class Local {
         for (File file : files) {
             if (file.isDirectory()) {
                 String nombreDirectorio = file.getName() + "/";
-                resultado.append(espacio).append("├───").append(nombreDirectorio).append("\n");
-                resultado.append(imprimirDirectorio(file.getAbsolutePath(), espacio + "│   "));
+                resultado.append(espacio).append("├─── ").append(nombreDirectorio).append("\n");
+                resultado.append(imprimirDirectorio(file.getAbsolutePath(), espacio + "│" + separador));
             } else {
-                resultado.append(espacio).append("└───").append(file.getName()).append("\n");
+                resultado.append(espacio).append("└─── ").append(file.getName()).append("\n");
             }
         }
 

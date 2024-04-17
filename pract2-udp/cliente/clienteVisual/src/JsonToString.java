@@ -32,12 +32,13 @@ public class JsonToString {
     }
 
     public String listado(JSONObject json, int nivel, String ruta) throws JSONException {
+        String space = "        ";
         StringBuilder resultado = new StringBuilder();
         String rutaActual = "";
         if (json.has("fldr")) {
             String carpetaActual = json.getString("fldr");
             rutaActual = carpetaActual + "/";
-            resultado.append("|   ".repeat(nivel)).append("├───").append(rutaActual).append("\n");
+            resultado.append("│        ".repeat(nivel)).append("├─── ").append(rutaActual).append("\n");
         }
         if (json.has("cont")) {
             JSONArray cont = json.getJSONArray("cont");
@@ -46,7 +47,7 @@ public class JsonToString {
                 if (item.has("fldr")) {
                     resultado.append(listado(item, nivel + 1, rutaActual));
                 } else if (item.has("file")) {
-                    resultado.append("|   ".repeat(nivel + 1)).append("└───").append(item.getString("file")).append("\n");
+                    resultado.append("│        ".repeat(nivel + 1)).append("└─── ").append(item.getString("file")).append("\n");
                 }
             }
         }

@@ -105,8 +105,8 @@ public class Remoto {
 
         Conexion conn2 = new Conexion();
         // cambiar aqui para udp o tcp
-        //conn2.enviarArchivo(rutitaNueva, tamBuffer, tamVentana);
-        conn2.enviarArchivoUDP(rutitaNueva, tamBuffer, tamVentana);
+        conn2.enviarArchivo(rutitaNueva, tamBuffer, tamVentana);
+        //conn2.enviarArchivoUDP(rutitaNueva, tamBuffer, tamVentana);
 
 
         // eliminar el .zip

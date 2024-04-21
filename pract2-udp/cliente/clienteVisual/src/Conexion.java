@@ -12,12 +12,14 @@ public class Conexion {
     private Socket socket;
     private PrintWriter salida;
     private BufferedReader entrada;
-    String hostName = "192.168.0.153";
+    String hostName = "localhost";
     int portNumber = 1234;
     int portNumber2 = 1235;
     int portNumber3 = 1236;
 
     Ventana ventana = new Ventana();
+
+
 
     public String SocketCliente(String env){
         String regreso = "";
@@ -51,7 +53,9 @@ public class Conexion {
     }
 
     public void enviarArchivoUDP(String rutitaNueva, int tamBuffer, int tamVentana) {
-        ventana.mensaje("Enviando archivo...");
+
+        Emergente porcent = new Emergente();
+
 
         try {
             File file = new File(rutitaNueva);
@@ -84,12 +88,16 @@ public class Conexion {
                     if(contador >= ventanaInicio && contador <= ventanaFin && bytesRead != -1) {
                         DatagramPacket packet = new DatagramPacket(buffer, bytesRead, serverAddress, portNumber2);
                         socket.send(packet);
-                        System.out.println("envie " + contador);
+                        //System.out.println("envie " + contador);
                         contador++;
                         totalBytesSend += bytesRead;
+
+
+
+
                         if(totalBytesSend >= file.length()){
                             finArchivo = 1;
-                            System.out.println("fin archivo, acabeeee");
+                            //System.out.println("fin archivo, acabeeee");
                             break;
 
                         }
@@ -105,11 +113,11 @@ public class Conexion {
                 String mensaje = new String(packet2.getData(), 0, packet2.getLength());
                 int sigVentana = Integer.parseInt(mensaje);
 
-                System.out.println("socket udp resp: "+sigVentana);
-                System.out.println("ventanaFin+1: "+(ventanaFin+1));
+                //System.out.println("socket udp resp: "+sigVentana);
+                //System.out.println("ventanaFin+1: "+(ventanaFin+1));
 
                 if(sigVentana == ventanaFin+1){
-                    System.out.println("correcto");
+                    //System.out.println("correcto");
                     ventanaInicio = ventanaFin+1;
                     ventanaFin = ventanaInicio + tamVentana-1;
 
@@ -122,6 +130,10 @@ public class Conexion {
                     finArchivo = 1;
                     System.out.println("fin archivo, acabeeee");
                 }
+                System.out.println("===> mandar mensaje");
+                int porcentaje = (int) ((totalBytesSend * 100) / file.length());
+                porcent.mostrar(porcentaje);
+
 
 
             }

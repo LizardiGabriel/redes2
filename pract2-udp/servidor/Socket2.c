@@ -171,8 +171,8 @@ int iniciarSocket(int puerto) {
             // pasar el parametro typeFile para saber si es un archivo o carpeta
             // cambiar para usar tco / udp
 
-            int recibirAlgo = iniciarSocket3(1235, nombreOriginal, pasarTam, ruta, typeFile, tamBufferInt, tamVentanaInt);
-            //int recibirAlgo = iniciarSocket3UDP(1235, nombreOriginal, pasarTam, ruta, typeFile, tamBufferInt, tamVentanaInt);
+            //int recibirAlgo = iniciarSocket3(1235, nombreOriginal, pasarTam, ruta, typeFile, tamBufferInt, tamVentanaInt);
+            int recibirAlgo = iniciarSocket3UDP(1235, nombreOriginal, pasarTam, ruta, typeFile, tamBufferInt, tamVentanaInt);
 
             if (recibirAlgo == 0) {
                 printf("Archivo recibido c:\n");

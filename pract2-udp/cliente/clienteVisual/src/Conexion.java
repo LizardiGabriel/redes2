@@ -1,5 +1,6 @@
 import org.json.JSONObject;
 
+import javax.swing.*;
 import java.io.*;
 import java.net.*;
 
@@ -54,7 +55,6 @@ public class Conexion {
 
     public void enviarArchivoUDP(String rutitaNueva, int tamBuffer, int tamVentana) {
 
-        Emergente porcent = new Emergente();
 
 
         try {
@@ -97,6 +97,7 @@ public class Conexion {
 
                         if(totalBytesSend >= file.length()){
                             finArchivo = 1;
+
                             //System.out.println("fin archivo, acabeeee");
                             break;
 
@@ -105,6 +106,9 @@ public class Conexion {
                     i++;
                 }
 
+                int porcentaje = (int) ((totalBytesSend * 100) / file.length());
+
+                System.out.println("porcentaje: "+porcentaje + "%");
                 // recibirRespuesta
                 byte[] buffer2 = new byte[1024];
                 DatagramPacket packet2 = new DatagramPacket(buffer2, buffer2.length);
@@ -130,9 +134,7 @@ public class Conexion {
                     finArchivo = 1;
                     System.out.println("fin archivo, acabeeee");
                 }
-                System.out.println("===> mandar mensaje");
-                int porcentaje = (int) ((totalBytesSend * 100) / file.length());
-                porcent.mostrar(porcentaje);
+
 
 
 

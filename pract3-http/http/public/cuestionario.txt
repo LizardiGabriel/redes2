@@ -1,0 +1,70 @@
+1, para que sirven los predicados?
+sirven para expresar proposiciones que dependen de variables, permitiendo así representar y razonar sobre un conjunto más amplio de situaciones y relaciones entre objetos. 
+Mientras que la lógica de enunciados se limita a proposiciones simples sin variables, la introducción de predicados permite cuantificar sobre estas variables y expresar relaciones más complejas entre ellas. 
+
+
+2.¿Qué es un predicado? 
+Un predicado es una expresión que describe una propiedad, acción o relación sobre uno o más elementos en un enunciado. En otros términos, es una función que toma uno o más argumentos y devuelve un valor de verdad (verdadero o falso) cuando se aplica a esos argumentos. 
+
+ 
+3.¿Cuál es el alfabeto de los predicados? 
+El alfabeto de los predicados está compuesto por letras mayúsculas que representan los predicados. Estas letras suelen comenzar por P, Q, R, y así sucesivamente. Por ejemplo, se pueden usar las letras P, Q, R para denotar diferentes predicados en un contexto lógico.
+
+
+4.¿Cómo se representan los predicados? 
+se utiliza una letra mayúscula que comienza en "P", seguida de paréntesis que contienen los parámetros de la aplicación del predicado. Pueden ser varios parámetros
+
+
+5.¿Qué son las variables? 
+Las variables, son representaciones del dominio en el que opera una aplicación. Estas variables son utilizadas como predicados, lo que significa que asignan propiedades a elementos del dominio. En otros términos, las variables son parámetros que permiten expresar relaciones entre elementos dentro de un conjunto específico. 
+
+
+6.¿Qué son las constantes? 
+son tipos específicos de elementos dentro del dominio de aplicación. Estas constantes representan objetos individuales dentro del conjunto de elementos sobre los cuales opera el predicado, y se distinguen de las variables en que ya tienen valores específicos asignados y no pueden ser modificadas.
+
+
+7.¿Qué tipos de predicados hay? Menciona al menos 1 ejemplo para cada uno. 
+los tipos de predicados se pueden clasificar según el grado de parametrización que posean. 
+Enunciados: Son predicados con cero variables, es decir, han perdido todos sus parámetros. Un ejemplo sería "El sol brilla".
+Propiedades: Son predicados con una variable, y dotan al elemento x de alguna propiedad. Por ejemplo, "x es un lujo" o "x es un queso".
+Relaciones: Son predicados con más de una variable, lo que los convierte en una relación entre los elementos. Un ejemplo sería "x devora y" o "x conversa con y".
+Relaciones en n-aria: Cuando tienen más de dos variables, se convierten en relaciones en n-aria. Por ejemplo, "x ama y en z" o "x comparte a y con z".
+Cada tipo de predicado cumple una función distinta en la lógica, desde describir estados o cualidades hasta establecer relaciones entre entidades.
+
+
+8.¿Qué son los cuantificadores y cuántos hay? Muestra unos ejemplos usando los cuantificadores. 
+Los cuantificadores son símbolos utilizados en lógica para expresar el alcance de una proposición sobre un conjunto de elementos. En el texto se mencionan dos tipos de cuantificadores:
+Cuantificador Universal (∀): Representado por el símbolo "∀" (para todo), indica que una propiedad es verdadera para todos los elementos de un conjunto dado. Por ejemplo:
+∀x: x es una bola de colores.
+∀y: y es una persona.
+Cuantificador Existencial (∃): Representado por el símbolo "∃" (existe), indica que al menos un elemento del conjunto dado cumple con una propiedad. Por ejemplo:
+∃x: x es una bola roja.
+∃y: y es un hombre.
+Estos cuantificadores permiten expresar afirmaciones sobre conjuntos de elementos de manera concisa y precisa en lógica formal.
+
+
+9.¿Qué es el ámbito de un cuantificador? Anota mínimo 1 ejemplo. 
+El ámbito de un cuantificador es el alcance o la parte de una expresión lógica en la que el cuantificador opera. En otras palabras, es el fragmento de la fórmula en el que el cuantificador tiene efecto.
+Por ejemplo, en la expresión lógica:
+∀x: P(x) → Q(x)
+El ámbito del cuantificador universal (∀x) es toda la fórmula P(x) → Q(x). Esto significa que el cuantificador universal afecta a la proposición P(x) → Q(x), indicando que la proposición es verdadera para todos los valores de x en el dominio.
+
+
+10. ¿Qué son las variables libres y ligadas? 
+las variables libres y ligadas son conceptos importantes que se refieren a cómo las variables están relacionadas con los cuantificadores en una expresión lógica.
+Variable Ligada: Una variable se considera ligada si está sometida a la acción de algún cuantificador en la expresión lógica. Esto significa que la variable está dentro del ámbito del cuantificador y está sujeta a las restricciones impuestas por dicho cuantificador. Por ejemplo, en la expresión "∀x: P(x)", la variable "x" está ligada por el cuantificador universal ∀.
+
+
+Variable Libre: Una variable se considera libre si no está sujeta a la acción de ningún cuantificador en la expresión lógica. Esto significa que la variable no está dentro del ámbito de ningún cuantificador y puede tomar cualquier valor en el dominio sin restricciones impuestas por cuantificadores. Por ejemplo, en la expresión "P(x) ∧ Q(y)", las variables "x" y "y" son libres porque no están sujetas a ningún cuantificador.
+
+
+11.¿Cómo formalizar predicados? 
+Para formalizar predicados en lógica formal, se siguen varios pasos:
+a) Identificar las variables: Determina qué elementos del dominio están siendo referenciados en el predicado y asigna variables para representarlos. Por ejemplo, en el fragmento anterior se utilizan variables como x, y, z, etc.
+b) Definir el dominio: Especifica el conjunto de elementos sobre los cuales se aplicará el predicado. Por ejemplo, si estamos hablando de personas, el dominio podría ser el conjunto de todas las personas.
+c) Definir las propiedades y relaciones: Define las propiedades y relaciones que se aplican a los elementos del dominio utilizando los cuantificadores universales (∀) y existenciales (∃) cuando sea necesario.
+d) Utilizar cuantificadores: Decide si el predicado se aplica a todos los elementos del dominio ( ∀) o si existe al menos un elemento del dominio al cual se aplica (∃).
+e) Formalizar la proposición: Utiliza símbolos y conectores lógicos para formalizar la proposición de acuerdo a la estructura y el significado del predicado. Por ejemplo, utilizando el símbolo 
+P(x) para representar que x tiene una cierta propiedad P.
+f) Indicar la colectiva principal: Determina si la colectiva principal es una implicación (→) o una conjunción (∧) dependiendo del tipo de cuantificador utilizado.
+

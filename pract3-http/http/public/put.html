@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Subir y Borrar Documentos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+        }
+        
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            width: 300px;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #444;
+        }
+        
+        input[type="file"] {
+            margin: 10px 0;
+            width: 100%;
+        }
+        
+        button {
+            background-color: #1a73e8;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        button:hover {
+            background-color: #0c5fbd;
+        }
+        
+        table {
+            width: 80%;
+            margin-top: 20px;
+            border-collapse: collapse;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            background-color: #fff;
+        }
+        
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+            border-bottom: 2px solid #ddd;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        
+        a {
+            color: #1a73e8;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        hr {
+            border: 0;
+            height: 1px;
+            background: #ddd;
+            margin: 10px 0;
+        }
+    </style>
+
+</head>
+<body>
+
+    <div id="response"></div>
+    
+    <form id="uploadForm">
+        <h1>Subir Documento</h1>
+        <input type="file" id="fileInput" name="file" required>
+        <button type="submit">Subir</button>
+    </form>
+
+    <form id="deleteForm">
+        <h1>Borrar Documento</h1>
+        <select id="fileSelect" name="fileName" required>
+            <option value="">Selecciona un archivo...</option>
+        </select>
+        <button type="submit">Borrar</button>
+    </form>
+
+
+    <form id="headForm">
+        <label for="ruta">Ruta del recurso:</label><br>
+        <input type="text" id="ruta" name="ruta" value="foto2.jpg"><br><br>
+        <button type="submit">Enviar HEAD</button>
+    </form>
+
+
+
+    <table id="fileTable">
+        <thead>
+            <tr>
+                <th valign="top"><img src="/icons/folder.gif" alt="[ICO]"></th>
+                <th><a href="?C=N;O=D">Nombre</a></th>
+                <th><a href="?C=S;O=A">Tamaño</a></th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Aquí se generará dinámicamente el contenido de la tabla -->
+        </tbody>
+    </table>
+
+    <script>
+    document.getElementById('headForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevenir el envío del formulario
+    const ruta = document.getElementById('ruta').value;
+    const url = 'http://localhost:8888/uploads/' + ruta;
+
+        fetch(url, {
+            method: 'HEAD',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            })
+            .then(response => {
+                console.log('status: ', response.statusText);
+                if(response.statusText === "OK"){
+                    console.log('content-type: ', response.headers);
+                }
+
+                
+                
+                
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('Hubo un error al borrar el archivo.');
+            });
+});
+
+
+    </script>
+
+    <script>
+        window.onload = function() {
+            // Obtener archivos del servidor y llenar la tabla y el select
+            fetch('http://localhost:8888/obtenerArchivos', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const responseDiv = document.getElementById('response');
+                const fileSelect = document.getElementById('fileSelect');
+                const fileTableBody = document.querySelector('#fileTable tbody');
+
+                // Llenar el select y la tabla con los archivos obtenidos
+                for (const [fileName, fileSize] of Object.entries(data)) {
+                    const option = document.createElement('option');
+                    option.value = fileName;
+                    option.textContent = fileName;
+                    fileSelect.appendChild(option);
+
+                    const row = `
+                        <tr>
+                            <td valign="top"><img src="/icons/text.gif" alt="[   ]"></td>
+                            <td><a href="/uploads/${fileName}">${fileName}</a></td>
+                            <td align="right">${fileSize}</td>
+                        </tr>
+                    `;
+                    fileTableBody.innerHTML += row;
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevenir el envío del formulario
+
+            var fileInput = document.getElementById('fileInput').files[0];
+            if (!fileInput) {
+                alert('Por favor, selecciona un archivo.');
+                return;
+            }
+
+            var reader = new FileReader();
+            reader.onload = function(event) {
+                var base64String = event.target.result.split(',')[1]; // Obtener la cadena base64
+
+                // Crear el objeto JSON para enviar
+                var payload = {
+                    fileName: fileInput.name,
+                    fileExtension: fileInput.name.split('.').pop(),
+                    fileContent: base64String
+                };
+
+                fetch('http://localhost:8888/upload', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Éxito:', data);
+                    alert('Archivo subido con éxito.: ' + data.ruta);
+                    window.location.reload();
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert('Hubo un error al subir el archivo.');
+                });
+            };
+            reader.readAsDataURL(fileInput);
+        });
+    </script>
+
+    <script>
+        document.getElementById('deleteForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevenir el envío del formulario
+
+            var fileName = document.getElementById('fileSelect').value;
+
+            if (!fileName) {
+                alert('Por favor, selecciona un archivo a borrar.');
+                return;
+            }
+
+            fetch('http://localhost:8888/upload', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: fileName  // Enviar el nombre del archivo a borrar
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Éxito:', data);
+                alert('Archivo borrado con éxito.');
+                window.location.reload();
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('Hubo un error al borrar el archivo.');
+            });
+        });
+    </script>
+    
+</body>
+</html>

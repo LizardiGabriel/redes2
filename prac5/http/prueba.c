@@ -408,6 +408,8 @@ int main(int argc, char *argv[]) {
 
     printf("Waiting for connections on port %d\n", PORT_NO);
 
+    int aux = 0;
+
     while (1) {
         working_set = master_set;
         if (select(max_sd + 1, &working_set, NULL, NULL, NULL) < 0) {
@@ -430,6 +432,8 @@ int main(int argc, char *argv[]) {
                     if (new_socket > max_sd) {
                         max_sd = new_socket;
                     }
+                    aux++;
+                    printf("-->conexion num: %d\n", aux);
                     printf("New connection , socket fd is %d , ip is : %s , port : %d \n" , new_socket , inet_ntoa(address.sin_addr) , ntohs(address.sin_port));
                 } else {  // It's a client socket with data to read
                     connection_handler(i, buffer, &master_set);

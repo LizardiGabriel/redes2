@@ -26,8 +26,7 @@ int BUFFER_SIZE = 60000;
 
 int MAX_BODY_SIZE = 60000;
 // Keeps the number of the threads working simultaneously.
-int thread_count = 0;
-// To control thread_counter.
+
 
 char PATH[] = "/home/lizarpez/Desktop/git/redes2/prac5/http";
 
@@ -325,14 +324,15 @@ void connection_handler(int sock, char *buffer, fd_set *master_set) {
     } 
     
     // Process the request
-    printf("%s\n", buffer); // Imprimir la petición recibida para debugging
+    printf("%s\n", buffer);
 
     char *request_lines[3];
     char *line_end = strstr(buffer, "\r\n");
     char *body = strstr(buffer, "\r\n\r\n");
 
     if (body) {
-        body += 4; // Skip \r\n\r\n to the body
+        // Skip \r\n\r\n to the body
+        body += 4; 
     }
 
     if (line_end) {
